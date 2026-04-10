@@ -1,12 +1,46 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { MetricCard } from '../../components/MetricCard';
 import { TransactionCard } from '../../components/TransactionCard';
-import { actionQueue, ownerMetrics, transactions } from '../../data/demoData';
+import { fetchActionQueue, fetchOwnerMetrics, fetchTransactions } from '../../api/client';
+import type { Metric, Transaction } from '../../data/demoData';
 import { ActionQueueItem } from '../../components/ActionQueueItem';
 
 export const CashflowPulseScreen = () => {
+  const [actionQueue, setActionQueue] = React.useState<any[]>([]);
+  const [ownerMetrics, setOwnerMetrics] = React.useState<Metric[]>([]);
+  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [act, met, trans] = await Promise.all([
+          fetchActionQueue(),
+          fetchOwnerMetrics(),
+          fetchTransactions(),
+        ]);
+        setActionQueue(act);
+        setOwnerMetrics(met);
+        setTransactions(trans);
+      } catch (e) {
+        console.error("Failed to load cashflow:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#0F766E" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

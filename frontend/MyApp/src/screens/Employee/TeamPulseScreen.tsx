@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
-import { employeeMetrics, teamMembers } from '../../data/demoData';
+import { fetchTeam } from '../../api/client';
 import { MetricCard } from '../../components/MetricCard';
 
 const getInitials = (name: string) => {
@@ -15,6 +15,30 @@ const getStatusColor = (status: string) => {
 };
 
 export const TeamPulseScreen = () => {
+  const [teamMembers, setTeamMembers] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchTeam();
+        setTeamMembers(data);
+      } catch (e) {
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#3B82F6" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

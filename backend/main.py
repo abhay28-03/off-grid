@@ -39,28 +39,72 @@ def test():
 def echo(data: dict):
     return {"you_sent": data}
 
-# --- New Supabase Routes ---
+# --- Data Store Endpoints ---
+import data_store
+
+@app.get("/api/dashboard/owner")
+def get_owner_dashboard():
+    return {"data": data_store.ownerDashboardFeatures}
+
+@app.get("/api/dashboard/employee")
+def get_employee_dashboard():
+    return {"data": data_store.employeeDashboardFeatures}
+
+@app.get("/api/metrics/owner")
+def get_owner_metrics():
+    return {"data": data_store.ownerMetrics}
+
+@app.get("/api/metrics/employee")
+def get_employee_metrics():
+    return {"data": data_store.employeeMetrics}
+
+@app.get("/api/sales")
+def get_sales():
+    return {"data": data_store.salesData}
+
+@app.get("/api/signals")
+def get_signals():
+    return {"data": data_store.liveSignals}
+
+@app.get("/api/transactions")
+def get_transactions():
+    return {"data": data_store.transactions}
+
+@app.get("/api/actions")
+def get_action_queue():
+    return {"data": data_store.actionQueue}
+
+@app.get("/api/briefs")
+def get_decision_briefs():
+    return {"data": data_store.decisionBriefs}
+
+@app.get("/api/inventory")
+def get_inventory():
+    return {"data": data_store.inventoryItems}
+
+@app.get("/api/routes")
+def get_routes():
+    return {"data": data_store.fieldRoutes}
+
+@app.get("/api/team")
+def get_team():
+    return {"data": data_store.teamMembers}
+
+@app.get("/api/clients")
+def get_clients():
+    return {"data": data_store.clients}
+
+@app.get("/api/workflow")
+def get_workflow():
+    return {"data": data_store.workflowItems}
+
+@app.get("/api/timeline")
+def get_timeline():
+    return {"data": data_store.timelineEvents}
+
+# --- New Supabase Routes (Legacy/Testing from before) ---
 
 @app.get("/items")
-def get_items():
-    try:
-        # Fetch all rows from the 'items' table in Supabase
-        response = supabase.table("items").select("*").execute()
-        return {"data": response.data}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/items")
-def create_item(item: ItemCreate):
-    try:
-        # Insert a new row into the 'items' table
-        response = supabase.table("items").insert({
-            "name": item.name,
-            "description": item.description
-        }).execute()
-        return {"message": "Item added successfully", "data": response.data}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 # --- Real-Time Employee Tracking (WebSockets) ---
 

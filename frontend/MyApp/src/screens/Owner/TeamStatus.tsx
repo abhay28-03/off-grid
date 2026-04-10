@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
-import { teamMembers } from '../../data/demoData';
+import { fetchTeam } from '../../api/client';
 
 const getInitials = (name: string) => {
   return name.substring(0, 2).toUpperCase();
@@ -14,6 +14,31 @@ const getStatusColor = (status: string) => {
 };
 
 export const TeamStatus = () => {
+  const [teamMembers, setTeamMembers] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const team = await fetchTeam();
+        setTeamMembers(team);
+      } catch (e) {
+        console.error("Failed to load team:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

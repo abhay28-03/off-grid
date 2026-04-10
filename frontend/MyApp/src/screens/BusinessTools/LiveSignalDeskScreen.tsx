@@ -1,10 +1,34 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { LiveSignalCard } from '../../components/LiveSignalCard';
-import { liveSignals } from '../../data/demoData';
+import { fetchSignals } from '../../api/client';
 
 export const LiveSignalDeskScreen = () => {
+  const [liveSignals, setLiveSignals] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchSignals();
+        setLiveSignals(data);
+      } catch (e) {
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#3B82F6" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

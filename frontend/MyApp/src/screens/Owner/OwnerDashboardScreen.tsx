@@ -4,16 +4,14 @@ import {
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
 } from 'react-native';
 
 import { AppsGrid } from '../../components/AppsGrid';
 import { MetricCard } from '../../components/MetricCard';
 import { TargetProgressBar } from '../../components/TargetProgressBar';
-import {
-  ownerDashboardFeatures,
-  ownerMetrics,
-} from '../../data/demoData';
-import type { FeatureId } from '../../data/demoData';
+import { fetchOwnerDashboard, fetchOwnerMetrics } from '../../api/client';
+import type { FeatureId, DashboardFeature, Metric } from '../../data/demoData';
 
 export type OwnerDashboardFeatureId = FeatureId;
 
@@ -22,6 +20,36 @@ interface OwnerDashboardScreenProps {
 }
 
 export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({ onOpenFeature }) => {
+  const [features, setFeatures] = React.useState<DashboardFeature[]>([]);
+  const [metrics, setMetrics] = React.useState<Metric[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [fRes, mRes] = await Promise.all([
+          fetchOwnerDashboard(),
+          fetchOwnerMetrics(),
+        ]);
+        setFeatures(fRes);
+        setMetrics(mRes);
+      } catch (err) {
+        console.error("Failed to load dashboard:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}
@@ -44,7 +72,7 @@ export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({ onOp
       />
 
       <View style={styles.metricsGrid}>
-        {ownerMetrics.map(metric => (
+        {metrics.map(metric => (
           <MetricCard
             key={metric.id}
             title={metric.title}
@@ -57,7 +85,7 @@ export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({ onOp
       </View>
 
       <Text style={styles.sectionTitle}>Apps</Text>
-      <AppsGrid features={ownerDashboardFeatures} onOpenFeature={onOpenFeature || (() => {})} />
+      <AppsGrid features={features} onOpenFeature={onOpenFeature || (() => {})} />
 
       <View style={{ height: 60 }} />
     </ScrollView>

@@ -1,9 +1,33 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
-import { timelineEvents } from '../../data/demoData';
+import { fetchTimeline } from '../../api/client';
 
 export const OpsTimelineScreen = () => {
+  const [timelineEvents, setTimelineEvents] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchTimeline();
+        setTimelineEvents(data);
+      } catch (e) {
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#0F766E" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

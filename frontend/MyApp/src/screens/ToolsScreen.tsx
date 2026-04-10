@@ -4,12 +4,37 @@ import {
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
 } from 'react-native';
 
 import { ActionQueueItem } from '../components/ActionQueueItem';
-import { actionQueue } from '../data/demoData';
+import { fetchActionQueue } from '../api/client';
 
 export const ToolsScreen: React.FC = () => {
+  const [actionQueue, setActionQueue] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchActionQueue();
+        setActionQueue(data);
+      } catch (e) {
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

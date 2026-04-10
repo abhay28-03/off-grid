@@ -5,17 +5,15 @@ import {
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
 } from 'react-native';
 
 import { AppsGrid } from '../../components/AppsGrid';
 import { MetricCard } from '../../components/MetricCard';
 import { StockUpdateCard } from '../../components/StockUpdateCard';
 import { TargetProgressBar } from '../../components/TargetProgressBar';
-import {
-  employeeDashboardFeatures,
-  employeeMetrics,
-} from '../../data/demoData';
-import type { FeatureId } from '../../data/demoData';
+import { fetchEmployeeDashboard, fetchEmployeeMetrics } from '../../api/client';
+import type { FeatureId, DashboardFeature, Metric } from '../../data/demoData';
 
 export type EmployeeDashboardFeatureId =
   | 'team-pulse'
@@ -31,9 +29,39 @@ interface EmployeeDashboardScreenProps {
 }
 
 export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = ({ onOpenFeature }) => {
+  const [features, setFeatures] = React.useState<DashboardFeature[]>([]);
+  const [metrics, setMetrics] = React.useState<Metric[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [fRes, mRes] = await Promise.all([
+          fetchEmployeeDashboard(),
+          fetchEmployeeMetrics(),
+        ]);
+        setFeatures(fRes);
+        setMetrics(mRes);
+      } catch (err) {
+        console.error("Failed to load dashboard:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
   const handleStockUpdate = (newSales: number) => {
     console.log('Stock updated:', newSales);
   };
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -57,7 +85,7 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
       />
 
       <View style={styles.metricsGrid}>
-        {employeeMetrics.map(metric => (
+        {metrics.map(metric => (
           <MetricCard
             key={metric.id}
             title={metric.title}
@@ -95,7 +123,7 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
       />
 
       <Text style={styles.sectionTitle}>Apps</Text>
-      <AppsGrid features={employeeDashboardFeatures} onOpenFeature={onOpenFeature || (() => {})} />
+      <AppsGrid features={features} onOpenFeature={onOpenFeature || (() => {})} />
 
       <View style={{ height: 60 }} />
     </ScrollView>

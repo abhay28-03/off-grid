@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { MapPin } from 'lucide-react-native';
 
-import { fieldRoutes, teamMembers } from '../../data/demoData';
+import { fetchRoutes, fetchTeam } from '../../api/client';
 
 const WS_URL = 'ws://localhost:8000/ws/v1/tracking/live';
 
@@ -12,6 +12,23 @@ export const MapTrackingScreen = () => {
     sector: { top: 96, left: 220 },
     west: { top: 160, left: 78 },
   });
+  
+  const [fieldRoutes, setFieldRoutes] = React.useState<any[]>([]);
+  const [teamMembers, setTeamMembers] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [routes, team] = await Promise.all([
+          fetchRoutes(),
+          fetchTeam(),
+        ]);
+        setFieldRoutes(routes);
+        setTeamMembers(team);
+      } catch (e) {}
+    };
+    loadData();
+  }, []);
 
   const [wsStatus, setWsStatus] = useState('Connecting...');
   const ws = useRef<WebSocket | null>(null);

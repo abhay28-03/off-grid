@@ -1,18 +1,54 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { AppsGrid } from '../../components/AppsGrid';
 import { LiveSignalCard } from '../../components/LiveSignalCard';
 import { PulseMetricCard } from '../../components/PulseMetricCard';
 import { SalesBarChart } from '../../components/SalesBarChart';
-import { liveSignals, ownerDashboardFeatures, ownerMetrics, salesData } from '../../data/demoData';
-import type { FeatureId } from '../../data/demoData';
+import { fetchSignals, fetchOwnerDashboard, fetchOwnerMetrics, fetchSales } from '../../api/client';
+import type { FeatureId, LiveSignal, DashboardFeature, Metric, SalesDataPoint } from '../../data/demoData';
 
 interface BusinessCommandCenterScreenProps {
   onOpenFeature?: (featureId: FeatureId) => void;
 }
 
 export const BusinessCommandCenterScreen: React.FC<BusinessCommandCenterScreenProps> = ({ onOpenFeature }) => {
+  const [liveSignals, setLiveSignals] = React.useState<LiveSignal[]>([]);
+  const [ownerDashboardFeatures, setOwnerDashboardFeatures] = React.useState<DashboardFeature[]>([]);
+  const [ownerMetrics, setOwnerMetrics] = React.useState<Metric[]>([]);
+  const [salesData, setSalesData] = React.useState<SalesDataPoint[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [sig, feat, met, sales] = await Promise.all([
+          fetchSignals(),
+          fetchOwnerDashboard(),
+          fetchOwnerMetrics(),
+          fetchSales(),
+        ]);
+        setLiveSignals(sig);
+        setOwnerDashboardFeatures(feat);
+        setOwnerMetrics(met);
+        setSalesData(sales);
+      } catch (e) {
+        console.error("Failed to load business center:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

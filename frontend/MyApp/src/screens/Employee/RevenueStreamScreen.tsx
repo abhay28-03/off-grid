@@ -1,11 +1,35 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { MetricCard } from '../../components/MetricCard';
 import { TransactionCard } from '../../components/TransactionCard';
-import { employeeMetrics, transactions } from '../../data/demoData';
+import { fetchTransactions } from '../../api/client';
 
 export const RevenueStreamScreen = () => {
+  const [transactions, setTransactions] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchTransactions();
+        setTransactions(data);
+      } catch (e) {
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#0F766E" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}

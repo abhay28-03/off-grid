@@ -1,10 +1,40 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { ActionQueueItem } from '../../components/ActionQueueItem';
-import { inventoryItems, actionQueue } from '../../data/demoData';
+import { fetchInventory, fetchActionQueue } from '../../api/client';
 
 export const InventoryPulseScreen = () => {
+  const [inventoryItems, setInventoryItems] = React.useState<any[]>([]);
+  const [actionQueue, setActionQueue] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [inv, act] = await Promise.all([
+          fetchInventory(),
+          fetchActionQueue(),
+        ]);
+        setInventoryItems(inv);
+        setActionQueue(act);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#B45309" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.screen}
