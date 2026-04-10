@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { LiveSignalCard } from '../../components/LiveSignalCard';
 import { liveSignals } from '../../data/demoData';
@@ -31,13 +31,14 @@ export const LiveSignalDeskScreen = () => {
           actionLabel={signal.actionLabel}
         />
       ))}
+      <View style={{ height: 60 }} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -45,24 +46,24 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   kicker: {
-    color: '#0F766E',
+    color: '#3B82F6',
     fontSize: 13,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     marginBottom: 8,
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 15,
     lineHeight: 22,
-    marginBottom: 18,
+    marginBottom: 24,
   },
 });

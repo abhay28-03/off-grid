@@ -24,33 +24,39 @@ import { InventoryPulseScreen } from './src/screens/Owner/InventoryPulseScreen';
 import { MapTrackingScreen } from './src/screens/Owner/MapTrackingScreen';
 import { OwnerDashboardScreen } from './src/screens/Owner/OwnerDashboardScreen';
 import { TeamStatus } from './src/screens/Owner/TeamStatus';
+import { ToolsScreen } from './src/screens/ToolsScreen';
 import type { FeatureId } from './src/data/demoData';
 
 const featureTitles: Record<FeatureId, string> = {
-  'business-command-center': 'Command Center',
-  'cashflow-pulse': 'Cashflow Pulse',
-  'client-pulse': 'Client Pulse',
-  'decision-brief': 'Decision Briefs',
-  'field-ops-map': 'Field Ops Map',
-  'inventory-pulse': 'Inventory Pulse',
-  'live-signal-desk': 'Signal Desk',
-  'ops-timeline': 'Ops Timeline',
-  'revenue-stream': 'Revenue Stream',
-  'team-pulse': 'Team Pulse',
-  'workflow-pulse': 'Workflow Pulse',
+  'business-command-center': 'Dashboard Overview',
+  'cashflow-pulse': 'Payments & Cashflow',
+  'client-pulse': 'Customer Health',
+  'decision-brief': 'Pending Approvals',
+  'field-ops-map': 'Team Locations',
+  'inventory-pulse': 'Inventory & Stock',
+  'live-signal-desk': 'Important Alerts',
+  'ops-timeline': 'Activity Log',
+  'revenue-stream': 'Sales & Invoices',
+  'team-pulse': 'Staff Availability',
+  'workflow-pulse': 'Active Projects',
 };
+
+type TabId = 'home' | 'inbox' | 'tools';
 
 function App() {
   const [role, setRole] = useState<LoginRole | null>(null);
+  const [activeTab, setActiveTab] = useState<TabId>('home');
   const [activeFeature, setActiveFeature] = useState<FeatureId | null>(null);
 
   function handleRoleSelect(selectedRole: LoginRole) {
     setRole(selectedRole);
+    setActiveTab('home');
     setActiveFeature(null);
   }
 
   function handleLogout() {
     setRole(null);
+    setActiveTab('home');
     setActiveFeature(null);
   }
 
@@ -83,7 +89,15 @@ function App() {
     }
   }
 
-  function renderDashboard() {
+  function renderTabContent() {
+    if (activeTab === 'inbox') {
+      return <LiveSignalDeskScreen />;
+    }
+    if (activeTab === 'tools') {
+      return (
+        <ToolsScreen role={role!} onOpenFeature={(id) => setActiveFeature(id)} />
+      );
+    }
     if (role === 'owner') {
       return (
         <OwnerDashboardScreen
@@ -91,7 +105,6 @@ function App() {
         />
       );
     }
-
     return (
       <EmployeeDashboardScreen
         onOpenFeature={featureId => setActiveFeature(featureId)}
@@ -102,7 +115,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F5F7FA" />
+        <StatusBar barStyle="light-content" backgroundColor="#09090b" />
         {role ? (
           <View style={styles.topBar}>
             <View style={styles.topBarText}>
@@ -110,7 +123,13 @@ function App() {
                 {role === 'owner' ? 'Owner demo' : 'Employee demo'}
               </Text>
               <Text style={styles.routeTitle}>
-                {activeFeature ? featureTitles[activeFeature] : 'Dashboard'}
+                {activeFeature
+                  ? featureTitles[activeFeature]
+                  : activeTab === 'home'
+                  ? 'Home'
+                  : activeTab === 'inbox'
+                  ? 'Inbox'
+                  : 'Tools'}
               </Text>
             </View>
             <View style={styles.topActions}>
@@ -120,25 +139,103 @@ function App() {
                   style={styles.topButton}
                   onPress={() => setActiveFeature(null)}
                 >
-                  <Text style={styles.topButtonText}>Dashboard</Text>
+                  <Text style={styles.topButtonText}>Close</Text>
                 </TouchableOpacity>
               ) : null}
               <TouchableOpacity
                 activeOpacity={0.75}
-                style={styles.topButton}
+                style={[styles.topButton, styles.logoutButton]}
                 onPress={handleLogout}
               >
-                <Text style={styles.topButtonText}>Switch</Text>
+                <Text style={styles.logoutButtonText}>Switch User</Text>
               </TouchableOpacity>
             </View>
           </View>
         ) : null}
 
         <View style={styles.body}>
-          {role ? activeFeature ? renderFeature() : renderDashboard() : (
+          {role ? (
+            activeFeature ? (
+              renderFeature()
+            ) : (
+              renderTabContent()
+            )
+          ) : (
             <LoginScreen onSelectRole={handleRoleSelect} />
           )}
         </View>
+
+        {role && !activeFeature && (
+          <View style={styles.bottomNavContainer}>
+            <View style={styles.bottomNav}>
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => setActiveTab('home')}
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    styles.navPill,
+                    activeTab === 'home' && styles.navPillActive,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.navText,
+                      activeTab === 'home' && styles.navTextActive,
+                    ]}
+                  >
+                    Home
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => setActiveTab('inbox')}
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    styles.navPill,
+                    activeTab === 'inbox' && styles.navPillActive,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.navText,
+                      activeTab === 'inbox' && styles.navTextActive,
+                    ]}
+                  >
+                    Inbox
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => setActiveTab('tools')}
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    styles.navPill,
+                    activeTab === 'tools' && styles.navPillActive,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.navText,
+                      activeTab === 'tools' && styles.navTextActive,
+                    ]}
+                  >
+                    Tools
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -146,7 +243,7 @@ function App() {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   body: {
@@ -154,28 +251,28 @@ const styles = StyleSheet.create({
   },
   topBar: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderBottomColor: '#E5E7EB',
+    backgroundColor: '#09090b',
+    borderBottomColor: '#27272a',
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
   },
   topBarText: {
     flex: 1,
     marginRight: 12,
   },
   roleLabel: {
-    color: '#64748B',
-    fontSize: 12,
+    color: '#a1a1aa',
+    fontSize: 11,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
   routeTitle: {
-    color: '#111827',
-    fontSize: 18,
+    color: '#fafafa',
+    fontSize: 20,
     fontWeight: '800',
     marginTop: 2,
   },
@@ -183,17 +280,60 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   topButton: {
-    backgroundColor: '#ECFDF5',
-    borderColor: '#A7F3D0',
-    borderRadius: 8,
-    borderWidth: 1,
+    backgroundColor: '#27272a',
+    borderRadius: 20,
     marginLeft: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     paddingVertical: 8,
   },
   topButtonText: {
-    color: '#0F766E',
-    fontSize: 12,
+    color: '#fafafa',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  logoutButton: {
+    backgroundColor: 'transparent',
+    borderColor: '#3f3f46',
+    borderWidth: 1,
+  },
+  logoutButtonText: {
+    color: '#a1a1aa',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  bottomNavContainer: {
+    backgroundColor: '#09090b',
+    borderTopColor: '#27272a',
+    borderTopWidth: 1,
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
+  bottomNav: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 16,
+  },
+  navItem: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  navPill: {
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  navPillActive: {
+    backgroundColor: '#27272a',
+  },
+  navText: {
+    color: '#71717a',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  navTextActive: {
+    color: '#fafafa',
     fontWeight: '800',
   },
 });

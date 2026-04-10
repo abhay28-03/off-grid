@@ -12,9 +12,9 @@ export interface ActionQueueItemProps {
 }
 
 const priorityConfig = {
-  high: { color: '#BE123C', bg: '#FFF1F2', label: 'High' },
-  medium: { color: '#B45309', bg: '#FFFBEB', label: 'Medium' },
-  low: { color: '#0F766E', bg: '#ECFDF5', label: 'Low' },
+  high: { color: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)', label: 'High' },
+  medium: { color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)', label: 'Medium' },
+  low: { color: '#10B981', bg: 'rgba(16, 185, 129, 0.1)', label: 'Low' },
 };
 
 export const ActionQueueItem: React.FC<ActionQueueItemProps> = ({
@@ -45,9 +45,9 @@ export const ActionQueueItem: React.FC<ActionQueueItemProps> = ({
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
+    borderRadius: 16,
     borderWidth: 1,
     marginBottom: 12,
     padding: 16,
@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   owner: {
-    color: '#64748B',
+    color: '#a1a1aa',
     flex: 1,
     fontSize: 12,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     marginRight: 8,
     textTransform: 'uppercase',
   },
@@ -75,23 +75,23 @@ const styles = StyleSheet.create({
   priorityText: {
     fontSize: 11,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 16,
     fontWeight: '800',
     lineHeight: 22,
     marginBottom: 6,
   },
   detail: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 10,
   },
   dueLabel: {
-    color: '#0F766E',
+    color: '#3b82f6',
     fontSize: 12,
     fontWeight: '800',
   },

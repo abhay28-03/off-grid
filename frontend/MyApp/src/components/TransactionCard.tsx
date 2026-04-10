@@ -27,7 +27,7 @@ const formatAmount = (amount: number) =>
 
 export const TransactionCard: React.FC<TransactionCardProps> = ({ entry }) => {
   const isInflow = entry.direction === 'inflow';
-  const amountColor = isInflow ? '#0F766E' : '#BE123C';
+  const amountColor = isInflow ? '#10B981' : '#EF4444';
 
   return (
     <View style={styles.card}>
@@ -62,9 +62,9 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({ entry }) => {
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
+    borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -77,28 +77,28 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   category: {
-    color: '#0F766E',
+    color: '#3b82f6',
     fontSize: 12,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   accountName: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 16,
     fontWeight: '800',
     letterSpacing: 0,
     marginBottom: 4,
   },
   note: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 19,
     marginBottom: 6,
   },
   timestamp: {
-    color: '#64748B',
+    color: '#71717a',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -113,17 +113,17 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   statusBadge: {
-    backgroundColor: '#F8FAFC',
-    borderColor: '#E5E7EB',
+    backgroundColor: '#27272a',
+    borderColor: '#3f3f46',
     borderRadius: 8,
     borderWidth: 1,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   statusText: {
-    color: '#475569',
+    color: '#a1a1aa',
     fontSize: 11,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
   },
 });

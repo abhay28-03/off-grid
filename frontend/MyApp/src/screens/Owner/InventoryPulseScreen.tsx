@@ -52,7 +52,7 @@ export const InventoryPulseScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -68,21 +68,21 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,
   },
   itemCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
     borderRadius: 8,
     borderWidth: 1,
     marginBottom: 12,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   itemName: {
-    color: '#111827',
+    color: '#fafafa',
     flex: 1,
     fontSize: 17,
     fontWeight: '800',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   status: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 12,
@@ -128,17 +128,17 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   actionText: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 15,
     fontWeight: '800',
     marginBottom: 4,
   },
   eta: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 13,
   },
   sectionTitle: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 17,
     fontWeight: '800',
     marginBottom: 10,

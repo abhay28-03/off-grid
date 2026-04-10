@@ -36,7 +36,7 @@ export const OpsTimelineScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -52,14 +52,14 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     width: 68,
   },
   time: {
-    color: '#64748B',
+    color: '#71717a',
     fontSize: 12,
     fontWeight: '800',
     marginBottom: 8,
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     width: 2,
   },
   eventCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
     borderRadius: 8,
     borderWidth: 1,
     flex: 1,
@@ -101,13 +101,13 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   eventTitle: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 16,
     fontWeight: '800',
     marginBottom: 6,
   },
   detail: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 20,
   },

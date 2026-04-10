@@ -28,7 +28,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
     if (isDisabled && !isOutline) return '#94A3B8';
     if (isOutline) return '#0F766E';
     if (variant === 'secondary') return '#0F172A';
-    return '#FFFFFF';
+    return '#18181b';
   };
 
   return (

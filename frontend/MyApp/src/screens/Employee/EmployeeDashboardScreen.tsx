@@ -3,15 +3,14 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
 import { ActionQueueItem } from '../../components/ActionQueueItem';
 import { MetricCard } from '../../components/MetricCard';
+import { TargetProgressBar } from '../../components/TargetProgressBar';
 import {
   actionQueue,
-  employeeDashboardFeatures,
   employeeMetrics,
 } from '../../data/demoData';
 import type { FeatureId } from '../../data/demoData';
@@ -29,9 +28,7 @@ interface EmployeeDashboardScreenProps {
   onOpenFeature?: (featureId: FeatureId) => void;
 }
 
-export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = ({
-  onOpenFeature,
-}) => {
+export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = () => {
   const assignedActions = actionQueue.slice(1, 4);
 
   return (
@@ -41,13 +38,18 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.header}>
-        <Text style={styles.eyebrow}>Employee workspace</Text>
-        <Text style={styles.title}>Your shift, signals, and actions.</Text>
+        <Text style={styles.title}>Overview</Text>
         <Text style={styles.subtitle}>
-          Work from live task flow, route status, client updates, and offline sync
-          health.
+          Today's operational metrics and active queue.
         </Text>
       </View>
+
+      <TargetProgressBar
+        title="Daily Collections Target"
+        current={21400}
+        target={15000}
+        prefix="Rs "
+      />
 
       <View style={styles.metricsGrid}>
         {employeeMetrics.map(metric => (
@@ -62,24 +64,6 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
         ))}
       </View>
 
-      <Text style={styles.sectionTitle}>Feature access</Text>
-      <View style={styles.grid}>
-        {employeeDashboardFeatures.map(feature => (
-          <TouchableOpacity
-            key={feature.id}
-            activeOpacity={0.78}
-            style={styles.featureCard}
-            onPress={() => onOpenFeature?.(feature.id)}
-          >
-            <View style={styles.featureHeader}>
-              <Text style={styles.featureTitle}>{feature.title}</Text>
-              <Text style={styles.signal}>{feature.signal}</Text>
-            </View>
-            <Text style={styles.featureSummary}>{feature.summary}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
       <Text style={styles.sectionTitle}>My action queue</Text>
       {assignedActions.map(action => (
         <ActionQueueItem
@@ -91,13 +75,14 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
           priority={action.priority}
         />
       ))}
+      <View style={{ height: 60 }} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -105,75 +90,39 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   eyebrow: {
-    color: '#BE123C',
+    color: '#3B82F6',
     fontSize: 13,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     marginBottom: 8,
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
-    fontSize: 30,
+    color: '#fafafa',
+    fontSize: 32,
     fontWeight: '800',
-    lineHeight: 36,
+    lineHeight: 38,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
-    fontSize: 15,
-    lineHeight: 22,
+    color: '#a1a1aa',
+    fontSize: 16,
+    lineHeight: 24,
   },
   metricsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 16,
   },
   sectionTitle: {
-    color: '#111827',
-    fontSize: 17,
+    color: '#fafafa',
+    fontSize: 20,
     fontWeight: '800',
-    marginBottom: 10,
+    marginBottom: 16,
     marginTop: 12,
-  },
-  grid: {
-    marginBottom: 8,
-  },
-  featureCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    borderWidth: 1,
-    marginBottom: 12,
-    padding: 16,
-  },
-  featureHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  featureTitle: {
-    color: '#111827',
-    flex: 1,
-    fontSize: 17,
-    fontWeight: '800',
-    marginRight: 12,
-  },
-  signal: {
-    color: '#BE123C',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 0,
-    textTransform: 'uppercase',
-  },
-  featureSummary: {
-    color: '#4B5563',
-    fontSize: 14,
-    lineHeight: 20,
   },
 });

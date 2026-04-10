@@ -63,11 +63,11 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     fontSize: 16,
     color: '#0F172A',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#18181b',
   },
   inputFocused: {
     borderColor: '#0F766E',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#18181b',
     shadowColor: '#0F766E',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,

@@ -57,7 +57,7 @@ export const CashflowPulseScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -73,14 +73,14 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   sectionTitle: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 17,
     fontWeight: '800',
     marginBottom: 10,

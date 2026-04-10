@@ -10,9 +10,9 @@ export interface MetricCardProps {
 }
 
 const trendConfig = {
-  up: { color: '#0F766E', bg: '#ECFDF5', prefix: '+' },
-  down: { color: '#BE123C', bg: '#FFF1F2', prefix: '-' },
-  neutral: { color: '#475569', bg: '#F1F5F9', prefix: '' },
+  up: { color: '#10B981', bg: 'rgba(16, 185, 129, 0.1)', prefix: '+' },
+  down: { color: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)', prefix: '-' },
+  neutral: { color: '#a1a1aa', bg: 'rgba(161, 161, 170, 0.1)', prefix: '' },
 };
 
 export const MetricCard: React.FC<MetricCardProps> = ({
@@ -45,9 +45,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
+    borderRadius: 16,
     borderWidth: 1,
     flexBasis: '48%',
     flexGrow: 1,
@@ -56,10 +56,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   title: {
-    color: '#64748B',
+    color: '#a1a1aa',
     fontSize: 12,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     marginBottom: 8,
     textTransform: 'uppercase',
   },
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   value: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 24,
     fontWeight: '800',
     letterSpacing: 0,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   caption: {
-    color: '#64748B',
+    color: '#71717a',
     fontSize: 13,
     lineHeight: 18,
     marginTop: 8,

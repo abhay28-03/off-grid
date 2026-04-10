@@ -15,10 +15,10 @@ export interface LiveSignalCardProps {
 }
 
 const severityConfig = {
-  critical: { color: '#BE123C', bg: '#FFF1F2', label: 'Critical' },
-  warning: { color: '#B45309', bg: '#FFFBEB', label: 'Warning' },
-  opportunity: { color: '#0F766E', bg: '#ECFDF5', label: 'Opportunity' },
-  info: { color: '#2563EB', bg: '#EFF6FF', label: 'Info' },
+  critical: { color: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)', label: 'Critical' },
+  warning: { color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)', label: 'Warning' },
+  opportunity: { color: '#10B981', bg: 'rgba(16, 185, 129, 0.1)', label: 'Opportunity' },
+  info: { color: '#3B82F6', bg: 'rgba(59, 130, 246, 0.1)', label: 'Info' },
 };
 
 const statusConfig = {
@@ -66,7 +66,7 @@ export const LiveSignalCard: React.FC<LiveSignalCardProps> = ({
 
       <View style={styles.footer}>
         <Text style={styles.updatedAt}>Updated {updatedAt}</Text>
-        {actionLabel ? <Text style={styles.actionText}>{actionLabel}</Text> : null}
+        {actionLabel ? <Text style={[styles.actionText, { color: config.color }]}>{actionLabel}</Text> : null}
       </View>
     </View>
   );
@@ -74,10 +74,10 @@ export const LiveSignalCard: React.FC<LiveSignalCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
     borderLeftWidth: 4,
-    borderRadius: 8,
+    borderRadius: 16,
     borderWidth: 1,
     marginBottom: 12,
     padding: 16,
@@ -99,10 +99,10 @@ const styles = StyleSheet.create({
     width: 10,
   },
   typeText: {
-    color: '#475569',
+    color: '#a1a1aa',
     fontSize: 12,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
   badge: {
@@ -113,24 +113,24 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 11,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 18,
     fontWeight: '800',
     lineHeight: 24,
     marginBottom: 8,
   },
   summary: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 20,
   },
   impactBox: {
-    backgroundColor: '#F8FAFC',
-    borderColor: '#E5E7EB',
+    backgroundColor: '#27272a',
+    borderColor: '#3f3f46',
     borderRadius: 8,
     borderWidth: 1,
     marginTop: 14,
@@ -139,12 +139,12 @@ const styles = StyleSheet.create({
   impactLabel: {
     fontSize: 12,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   impactText: {
-    color: '#1F2937',
+    color: '#e4e4e7',
     fontSize: 14,
     lineHeight: 20,
   },
@@ -155,12 +155,11 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   updatedAt: {
-    color: '#64748B',
+    color: '#71717a',
     fontSize: 12,
     fontWeight: '600',
   },
   actionText: {
-    color: '#0F766E',
     fontSize: 12,
     fontWeight: '800',
   },

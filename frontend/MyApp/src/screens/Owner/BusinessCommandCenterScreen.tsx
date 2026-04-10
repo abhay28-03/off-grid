@@ -13,12 +13,7 @@ export const BusinessCommandCenterScreen = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.kicker}>Command center</Text>
       <Text style={styles.title}>Business pulse for the next decision.</Text>
-      <Text style={styles.subtitle}>
-        A single hardcoded control room for live revenue, risk, offline sync, and
-        urgent owner actions.
-      </Text>
 
       <View style={styles.pulseGrid}>
         {ownerMetrics.map(metric => (
@@ -64,7 +59,7 @@ export const BusinessCommandCenterScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -80,14 +75,14 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 29,
     fontWeight: '800',
     lineHeight: 35,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,
@@ -96,7 +91,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionTitle: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 17,
     fontWeight: '800',
     marginBottom: 10,

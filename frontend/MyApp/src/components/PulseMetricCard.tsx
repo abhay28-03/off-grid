@@ -40,9 +40,9 @@ export const PulseMetricCard: React.FC<PulseMetricCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
+    borderRadius: 16,
     borderTopWidth: 4,
     borderWidth: 1,
     marginBottom: 12,
@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   value: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 26,
     fontWeight: '800',
     letterSpacing: 0,
     marginBottom: 6,
   },
   context: {
-    color: '#64748B',
+    color: '#71717a',
     fontSize: 13,
     lineHeight: 18,
   },

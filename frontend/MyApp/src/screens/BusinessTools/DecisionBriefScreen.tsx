@@ -41,7 +41,7 @@ export const DecisionBriefScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -57,28 +57,28 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
     borderRadius: 8,
     borderWidth: 1,
     marginBottom: 14,
     padding: 16,
   },
   cardTitle: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 18,
     fontWeight: '800',
     lineHeight: 24,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   label: {
-    color: '#64748B',
+    color: '#71717a',
     fontSize: 12,
     fontWeight: '800',
     letterSpacing: 0,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   text: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 20,
   },
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   riskText: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 20,
   },

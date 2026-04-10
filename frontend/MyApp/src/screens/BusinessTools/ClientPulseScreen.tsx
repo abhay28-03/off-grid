@@ -36,7 +36,7 @@ export const ClientPulseScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#09090b',
     flex: 1,
   },
   content: {
@@ -52,21 +52,21 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#111827',
+    color: '#fafafa',
     fontSize: 28,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E7EB',
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
     borderRadius: 8,
     borderWidth: 1,
     marginBottom: 12,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   name: {
-    color: '#111827',
+    color: '#fafafa',
     flex: 1,
     fontSize: 17,
     fontWeight: '800',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   priority: {
-    color: '#64748B',
+    color: '#71717a',
     fontSize: 13,
     fontWeight: '800',
     marginBottom: 12,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   text: {
-    color: '#4B5563',
+    color: '#a1a1aa',
     fontSize: 14,
     lineHeight: 20,
   },
