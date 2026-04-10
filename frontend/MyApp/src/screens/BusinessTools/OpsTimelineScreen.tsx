@@ -3,7 +3,10 @@ import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-nat
 
 import { fetchTimeline } from '../../api/client';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const OpsTimelineScreen = () => {
+  const syncTick = useDashboardSync();
   const [timelineEvents, setTimelineEvents] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -18,7 +21,7 @@ export const OpsTimelineScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

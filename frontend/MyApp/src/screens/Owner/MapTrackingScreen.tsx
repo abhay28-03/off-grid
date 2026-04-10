@@ -6,7 +6,10 @@ import { fetchRoutes, fetchTeam } from '../../api/client';
 
 const WS_URL = 'ws://localhost:8000/ws/v1/tracking/live';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const MapTrackingScreen = () => {
+  const syncTick = useDashboardSync();
   const [pins, setPins] = useState({
     north: { top: 36, left: 24 },
     sector: { top: 96, left: 220 },
@@ -28,7 +31,7 @@ export const MapTrackingScreen = () => {
       } catch (e) {}
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   const [wsStatus, setWsStatus] = useState('Connecting...');
   const ws = useRef<WebSocket | null>(null);

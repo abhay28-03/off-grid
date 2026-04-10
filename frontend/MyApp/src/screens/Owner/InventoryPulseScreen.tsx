@@ -4,7 +4,10 @@ import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-nat
 import { ActionQueueItem } from '../../components/ActionQueueItem';
 import { fetchInventory, fetchActionQueue } from '../../api/client';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const InventoryPulseScreen = () => {
+  const syncTick = useDashboardSync();
   const [inventoryItems, setInventoryItems] = React.useState<any[]>([]);
   const [actionQueue, setActionQueue] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -25,7 +28,7 @@ export const InventoryPulseScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

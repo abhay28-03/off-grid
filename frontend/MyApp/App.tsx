@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  DeviceEventEmitter,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -47,6 +48,19 @@ function App() {
   const [role, setRole] = useState<LoginRole | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>('home');
   const [activeFeature, setActiveFeature] = useState<FeatureId | null>(null);
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8000/ws/v1/sync');
+    ws.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === 'REFRESH_DATA') {
+          DeviceEventEmitter.emit('refresh_dashboard');
+        }
+      } catch (err) {}
+    };
+    return () => ws.close();
+  }, []);
 
   function handleRoleSelect(selectedRole: LoginRole) {
     setRole(selectedRole);

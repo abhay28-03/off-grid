@@ -13,7 +13,10 @@ const getStatusColor = (status: string) => {
   return '#3B82F6'; // Default blue
 };
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const TeamStatus = () => {
+  const syncTick = useDashboardSync();
   const [teamMembers, setTeamMembers] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -29,7 +32,7 @@ export const TeamStatus = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

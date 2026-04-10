@@ -6,13 +6,14 @@ import {
   Text,
   View,
   ActivityIndicator,
+  DeviceEventEmitter,
 } from 'react-native';
 
 import { AppsGrid } from '../../components/AppsGrid';
 import { MetricCard } from '../../components/MetricCard';
 import { StockUpdateCard } from '../../components/StockUpdateCard';
 import { TargetProgressBar } from '../../components/TargetProgressBar';
-import { fetchEmployeeDashboard, fetchEmployeeMetrics } from '../../api/client';
+import { fetchEmployeeDashboard, fetchEmployeeMetrics, fetchInventory, updateStock } from '../../api/client';
 import type { FeatureId, DashboardFeature, Metric } from '../../data/demoData';
 
 export type EmployeeDashboardFeatureId =
@@ -31,17 +32,28 @@ interface EmployeeDashboardScreenProps {
 export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = ({ onOpenFeature }) => {
   const [features, setFeatures] = React.useState<DashboardFeature[]>([]);
   const [metrics, setMetrics] = React.useState<Metric[]>([]);
+  const [inventory, setInventory] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [refreshTick, setRefreshTick] = React.useState(0);
+
+  React.useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('refresh_dashboard', () => {
+      setRefreshTick(t => t + 1);
+    });
+    return () => sub.remove();
+  }, []);
 
   React.useEffect(() => {
     const loadData = async () => {
       try {
-        const [fRes, mRes] = await Promise.all([
+        const [fRes, mRes, iRes] = await Promise.all([
           fetchEmployeeDashboard(),
           fetchEmployeeMetrics(),
+          fetchInventory(),
         ]);
         setFeatures(fRes);
         setMetrics(mRes);
+        setInventory(iRes);
       } catch (err) {
         console.error("Failed to load dashboard:", err);
       } finally {
@@ -49,10 +61,14 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
       }
     };
     loadData();
-  }, []);
+  }, [refreshTick]);
 
-  const handleStockUpdate = (newSales: number) => {
-    console.log('Stock updated:', newSales);
+  const handleStockUpdate = async (itemId: string, newSales: number) => {
+    try {
+      await updateStock(itemId, newSales);
+    } catch (e) {
+      console.error('Failed to update stock', e);
+    }
   };
 
   if (loading) {
@@ -99,11 +115,7 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
 
       <Text style={styles.sectionTitle}>Stock Management</Text>
       <FlatList
-        data={[
-          { id: '1', name: 'Battery Pack Kits', stock: 42, sales: 3 },
-          { id: '2', name: 'Solar Controller', stock: 15, sales: 0 },
-          { id: '3', name: 'Water Filters', stock: 8, sales: 1 },
-        ]}
+        data={inventory}
         keyExtractor={item => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -113,10 +125,11 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
         style={styles.horizontalScroll}
         renderItem={({ item }) => (
           <StockUpdateCard
-            itemName={item.name}
+            key={item.id + item.sales} // Force remount if sales changes for this demo
+            itemName={item.item}
             initialStock={item.stock}
             initialSales={item.sales}
-            onUpdate={handleStockUpdate}
+            onUpdate={(val) => handleStockUpdate(item.id, val)}
             style={{ width: 280, marginRight: 16 }}
           />
         )}

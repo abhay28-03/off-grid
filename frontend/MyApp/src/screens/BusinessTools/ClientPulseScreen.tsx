@@ -3,7 +3,10 @@ import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-nat
 
 import { fetchClients } from '../../api/client';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const ClientPulseScreen = () => {
+  const syncTick = useDashboardSync();
   const [clients, setClients] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -18,7 +21,7 @@ export const ClientPulseScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

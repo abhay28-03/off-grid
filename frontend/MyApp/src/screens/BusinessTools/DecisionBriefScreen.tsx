@@ -3,7 +3,10 @@ import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-nat
 
 import { fetchDecisionBriefs } from '../../api/client';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const DecisionBriefScreen = () => {
+  const syncTick = useDashboardSync();
   const [decisionBriefs, setDecisionBriefs] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -18,7 +21,7 @@ export const DecisionBriefScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

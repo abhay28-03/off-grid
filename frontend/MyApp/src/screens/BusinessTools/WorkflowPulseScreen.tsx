@@ -4,7 +4,10 @@ import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-nat
 import { ActionQueueItem } from '../../components/ActionQueueItem';
 import { fetchActionQueue, fetchWorkflow } from '../../api/client';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const WorkflowPulseScreen = () => {
+  const syncTick = useDashboardSync();
   const [actionQueue, setActionQueue] = React.useState<any[]>([]);
   const [workflowItems, setWorkflowItems] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -24,7 +27,7 @@ export const WorkflowPulseScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

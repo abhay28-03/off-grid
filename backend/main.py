@@ -19,6 +19,10 @@ class ItemCreate(BaseModel):
     name: str
     description: str = None
 
+class StockUpdate(BaseModel):
+    id: str
+    sales: int
+
 @app.get("/")
 def home():
     return {"message": "Backend is running"}
@@ -129,6 +133,45 @@ class ConnectionManager:
                 pass
 
 manager = ConnectionManager()
+sync_manager = ConnectionManager()
+
+@app.websocket("/ws/v1/sync")
+async def websocket_sync_endpoint(websocket: WebSocket):
+    """
+    WebSocket endpoint for broadcasting global data reload events.
+    When an employee updates data, we fire a REFRESH_DATA to tell Owner phones to re-render.
+    """
+    await sync_manager.connect(websocket)
+    try:
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        sync_manager.disconnect(websocket)
+
+@app.post("/api/stock/update")
+async def update_stock(update: StockUpdate):
+    for item in data_store.inventoryItems:
+        if item["id"] == update.id:
+            old_sales = item.get("sales", 0)
+            diff = update.sales - old_sales
+            item["sales"] = update.sales
+            item["stock"] -= diff
+            
+            # Magically bump the items sold metric globally so Owner sees revenue tick up!
+            for metric in data_store.employeeMetrics:
+                if metric["id"] == "items-sold":
+                    metric["value"] = int(metric["value"]) + diff
+                    
+            for metric in data_store.ownerMetrics:
+                if metric["id"] == "weekly-revenue":
+                    # Let's pretend every item is Rs 2000
+                    metric["value"] = int(metric["value"]) + (diff * 2000)
+            
+            # Broadcast to all connected clients that the database changed!
+            await sync_manager.broadcast({"type": "REFRESH_DATA", "source": "stock"})
+            return {"status": "success", "item": item}
+            
+    raise HTTPException(status_code=404, detail="Item not found")
 
 @app.websocket("/ws/v1/tracking/live")
 async def websocket_tracking_endpoint(websocket: WebSocket):

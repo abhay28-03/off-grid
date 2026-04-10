@@ -4,7 +4,10 @@ import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-nat
 import { LiveSignalCard } from '../../components/LiveSignalCard';
 import { fetchSignals } from '../../api/client';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const LiveSignalDeskScreen = () => {
+  const syncTick = useDashboardSync();
   const [liveSignals, setLiveSignals] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -19,7 +22,7 @@ export const LiveSignalDeskScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

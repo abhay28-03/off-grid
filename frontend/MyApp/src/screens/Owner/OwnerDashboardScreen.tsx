@@ -5,6 +5,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  DeviceEventEmitter,
 } from 'react-native';
 
 import { AppsGrid } from '../../components/AppsGrid';
@@ -23,6 +24,14 @@ export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({ onOp
   const [features, setFeatures] = React.useState<DashboardFeature[]>([]);
   const [metrics, setMetrics] = React.useState<Metric[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [refreshTick, setRefreshTick] = React.useState(0);
+
+  React.useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('refresh_dashboard', () => {
+      setRefreshTick(t => t + 1);
+    });
+    return () => sub.remove();
+  }, []);
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -40,7 +49,7 @@ export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({ onOp
       }
     };
     loadData();
-  }, []);
+  }, [refreshTick]);
 
   if (loading) {
     return (

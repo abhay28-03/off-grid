@@ -12,7 +12,10 @@ interface BusinessCommandCenterScreenProps {
   onOpenFeature?: (featureId: FeatureId) => void;
 }
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const BusinessCommandCenterScreen: React.FC<BusinessCommandCenterScreenProps> = ({ onOpenFeature }) => {
+  const syncTick = useDashboardSync();
   const [liveSignals, setLiveSignals] = React.useState<LiveSignal[]>([]);
   const [ownerDashboardFeatures, setOwnerDashboardFeatures] = React.useState<DashboardFeature[]>([]);
   const [ownerMetrics, setOwnerMetrics] = React.useState<Metric[]>([]);
@@ -39,7 +42,7 @@ export const BusinessCommandCenterScreen: React.FC<BusinessCommandCenterScreenPr
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

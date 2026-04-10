@@ -25,13 +25,13 @@ employeeDashboardFeatures = [
 ]
 
 ownerMetrics = [
-  {"id": 'weekly-revenue', "title": 'Weekly Revenue', "value": 'Rs 520K', "trend": 'up', "trendValue": '12%', "caption": 'Compared to last week'},
-  {"id": 'profit-margin', "title": 'Profit Margin', "value": '24%', "trend": 'up', "trendValue": '2%', "caption": 'Across all operations'}
+  {"id": 'weekly-revenue', "title": 'Weekly Revenue', "value": 520000, "isCurrency": True, "trend": 'up', "trendValue": '12%', "caption": 'Compared to last week'},
+  {"id": 'profit-margin', "title": 'Profit Margin', "value": 24, "isCurrency": False, "isPercentage": True, "trend": 'up', "trendValue": '2%', "caption": 'Across all operations'}
 ]
 
 employeeMetrics = [
-  {"id": 'items-sold', "title": 'Items Sold', "value": '42', "trend": 'up', "trendValue": 'on pace', "caption": 'Logged today'},
-  {"id": 'collections-emp', "title": 'Collections', "value": 'Rs 21.4K', "trend": 'up', "trendValue": 'good', "caption": 'From completed visits'}
+  {"id": 'items-sold', "title": 'Items Sold', "value": 42, "trend": 'up', "trendValue": 'on pace', "caption": 'Logged today'},
+  {"id": 'collections-emp', "title": 'Collections', "value": 21400, "isCurrency": True, "trend": 'up', "trendValue": 'good', "caption": 'From completed visits'}
 ]
 
 salesData = [
@@ -70,9 +70,9 @@ decisionBriefs = [
 ]
 
 inventoryItems = [
-  {"id": 'inv-1', "item": 'Battery pack kits', "level": '18 units', "status": 'Demand spike', "action": 'Transfer from West Hub', "eta": '90 min window'},
-  {"id": 'inv-2', "item": 'Water filter cartridges', "level": '42 units', "status": 'Healthy', "action": 'No action needed', "eta": '3 day cover'},
-  {"id": 'inv-3', "item": 'Solar controller boards', "level": '7 units', "status": 'Low stock', "action": 'Create vendor order', "eta": 'Order today'}
+  {"id": 'inv-1', "item": 'Battery pack kits', "stock": 18, "sales": 3, "status": 'Demand spike', "action": 'Transfer from West Hub', "eta": '90 min window'},
+  {"id": 'inv-2', "item": 'Water filter cartridges', "stock": 42, "sales": 1, "status": 'Healthy', "action": 'No action needed', "eta": '3 day cover'},
+  {"id": 'inv-3', "item": 'Solar controller boards', "stock": 7, "sales": 0, "status": 'Low stock', "action": 'Create vendor order', "eta": 'Order today'}
 ]
 
 fieldRoutes = [

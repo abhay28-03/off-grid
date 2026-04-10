@@ -5,7 +5,10 @@ import { MetricCard } from '../../components/MetricCard';
 import { TransactionCard } from '../../components/TransactionCard';
 import { fetchTransactions } from '../../api/client';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const RevenueStreamScreen = () => {
+  const syncTick = useDashboardSync();
   const [transactions, setTransactions] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -20,7 +23,7 @@ export const RevenueStreamScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

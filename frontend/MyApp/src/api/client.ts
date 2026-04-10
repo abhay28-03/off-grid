@@ -93,3 +93,12 @@ export const fetchTimeline = async (): Promise<any[]> => {
   const json = await res.json();
   return json.data;
 };
+
+export const updateStock = async (itemId: string, sales: number) => {
+  const res = await fetch(`${BASE_URL}/stock/update`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: itemId, sales }),
+  });
+  return res.json();
+};

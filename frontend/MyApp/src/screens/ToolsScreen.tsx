@@ -10,7 +10,10 @@ import {
 import { ActionQueueItem } from '../components/ActionQueueItem';
 import { fetchActionQueue } from '../api/client';
 
+import { useDashboardSync } from '../hooks/useDashboardSync';
+
 export const ToolsScreen: React.FC = () => {
+  const syncTick = useDashboardSync();
   const [actionQueue, setActionQueue] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -25,7 +28,7 @@ export const ToolsScreen: React.FC = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (

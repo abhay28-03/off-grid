@@ -7,7 +7,10 @@ import { fetchActionQueue, fetchOwnerMetrics, fetchTransactions } from '../../ap
 import type { Metric, Transaction } from '../../data/demoData';
 import { ActionQueueItem } from '../../components/ActionQueueItem';
 
+import { useDashboardSync } from '../../hooks/useDashboardSync';
+
 export const CashflowPulseScreen = () => {
+  const syncTick = useDashboardSync();
   const [actionQueue, setActionQueue] = React.useState<any[]>([]);
   const [ownerMetrics, setOwnerMetrics] = React.useState<Metric[]>([]);
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
@@ -31,7 +34,7 @@ export const CashflowPulseScreen = () => {
       }
     };
     loadData();
-  }, []);
+  }, [syncTick]);
 
   if (loading) {
     return (
