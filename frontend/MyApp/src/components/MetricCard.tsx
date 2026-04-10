@@ -25,19 +25,19 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   const config = trendConfig[trend];
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { borderTopWidth: 3, borderTopColor: config.color }]}>
       <Text style={styles.title}>{title}</Text>
       <View style={styles.valueRow}>
-        <Text style={styles.value}>{value}</Text>
-        {trendValue ? (
-          <View style={[styles.trendBadge, { backgroundColor: config.bg }]}>
-            <Text style={[styles.trendText, { color: config.color }]}>
-              {config.prefix}
-              {trendValue}
-            </Text>
-          </View>
-        ) : null}
+        <Text style={styles.value} numberOfLines={1} adjustsFontSizeToFit>{value}</Text>
       </View>
+      {trendValue ? (
+        <View style={[styles.trendBadge, { backgroundColor: config.bg }]}>
+          <Text style={[styles.trendText, { color: config.color }]}>
+            {config.prefix}
+            {trendValue}
+          </Text>
+        </View>
+      ) : null}
       {caption ? <Text style={styles.caption}>{caption}</Text> : null}
     </View>
   );
@@ -45,46 +45,45 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#1c1c1e',
-    borderColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 20,
+    backgroundColor: '#18181b',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 4,
     borderWidth: 1,
-    flexBasis: '48%',
-    flexGrow: 1,
+    width: '48%',
     marginBottom: 16,
-    minWidth: 150,
-    padding: 16,
+    padding: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 8,
   },
   title: {
     color: '#a1a1aa',
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 0.5,
-    marginBottom: 10,
+    marginBottom: 12,
     textTransform: 'uppercase',
   },
   valueRow: {
-    alignItems: 'center',
+    alignItems: 'baseline',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexWrap: 'nowrap',
   },
   value: {
     color: '#fafafa',
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: '800',
     letterSpacing: -0.5,
     marginRight: 8,
   },
   trendBadge: {
-    borderRadius: 10,
+    borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
+    marginTop: 6,
+    alignSelf: 'flex-start',
   },
   trendText: {
     fontSize: 12,
@@ -95,6 +94,6 @@ const styles = StyleSheet.create({
     color: '#71717a',
     fontSize: 14,
     lineHeight: 20,
-    marginTop: 10,
+    marginTop: 12,
   },
 });

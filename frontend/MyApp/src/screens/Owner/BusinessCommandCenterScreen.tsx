@@ -1,12 +1,18 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { AppsGrid } from '../../components/AppsGrid';
 import { LiveSignalCard } from '../../components/LiveSignalCard';
 import { PulseMetricCard } from '../../components/PulseMetricCard';
 import { SalesBarChart } from '../../components/SalesBarChart';
-import { liveSignals, ownerMetrics, salesData } from '../../data/demoData';
+import { liveSignals, ownerDashboardFeatures, ownerMetrics, salesData } from '../../data/demoData';
+import type { FeatureId } from '../../data/demoData';
 
-export const BusinessCommandCenterScreen = () => {
+interface BusinessCommandCenterScreenProps {
+  onOpenFeature?: (featureId: FeatureId) => void;
+}
+
+export const BusinessCommandCenterScreen: React.FC<BusinessCommandCenterScreenProps> = ({ onOpenFeature }) => {
   return (
     <ScrollView
       style={styles.screen}
@@ -18,6 +24,7 @@ export const BusinessCommandCenterScreen = () => {
         <Text style={styles.subtitle}>Key metrics and top item performance.</Text>
       </View>
 
+      <Text style={styles.sectionTitle}>Overview</Text>
       <View style={styles.pulseGrid}>
         {ownerMetrics.map(metric => (
           <PulseMetricCard
@@ -46,6 +53,9 @@ export const BusinessCommandCenterScreen = () => {
           actionLabel={signal.actionLabel}
         />
       ))}
+
+      <Text style={styles.sectionTitle}>Apps</Text>
+      <AppsGrid features={ownerDashboardFeatures} onOpenFeature={onOpenFeature || (() => {})} />
       
       <View style={{ height: 40 }} />
     </ScrollView>
@@ -76,6 +86,13 @@ const styles = StyleSheet.create({
     color: '#a1a1aa',
     fontSize: 16,
     lineHeight: 24,
+  },
+  sectionTitle: {
+    color: '#fafafa',
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: 16,
+    letterSpacing: -0.3,
   },
   pulseGrid: {
     marginBottom: 8,

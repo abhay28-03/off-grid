@@ -21,20 +21,6 @@ export const TeamPulseScreen = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>Your shift and the people around you.</Text>
-
-      <View style={styles.metricsGrid}>
-        {employeeMetrics.slice(0, 2).map(metric => (
-          <MetricCard
-            key={metric.id}
-            title={metric.title}
-            value={metric.value}
-            trend={metric.trend}
-            trendValue={metric.trendValue}
-            caption={metric.caption}
-          />
-        ))}
-      </View>
 
       {teamMembers.map(member => (
         <View key={member.id} style={styles.card}>

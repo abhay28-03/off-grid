@@ -129,7 +129,7 @@ function App() {
                   ? 'Home'
                   : activeTab === 'inbox'
                   ? 'Inbox'
-                  : 'Tools'}
+                  : 'Actions'}
               </Text>
             </View>
             <View style={styles.topActions}>
@@ -229,7 +229,7 @@ function App() {
                       activeTab === 'tools' && styles.navTextActive,
                     ]}
                   >
-                    Tools
+                    Actions
                   </Text>
                 </View>
               </TouchableOpacity>

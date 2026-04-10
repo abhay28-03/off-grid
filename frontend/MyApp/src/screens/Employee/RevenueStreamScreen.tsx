@@ -12,20 +12,6 @@ export const RevenueStreamScreen = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>Capture collections without waiting for backend.</Text>
-      <View style={styles.metricsGrid}>
-        {employeeMetrics.slice(1, 3).map(metric => (
-          <MetricCard
-            key={metric.id}
-            title={metric.title}
-            value={metric.value}
-            trend={metric.trend}
-            trendValue={metric.trendValue}
-            caption={metric.caption}
-          />
-        ))}
-      </View>
-
       <Text style={styles.sectionTitle}>Recent revenue activity</Text>
       {transactions.map(transaction => (
         <TransactionCard key={transaction.id} entry={transaction} />

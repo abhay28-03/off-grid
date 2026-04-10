@@ -21,19 +21,19 @@ export const TargetProgressBar: React.FC<TargetProgressBarProps> = ({
   suffix = '',
 }) => {
   const isProfit = current >= target;
-  
+
   // Use a max floor so the bar doesn't break UI layout if 0
   const safeTarget = target || 1;
   const percentage = Math.min((current / safeTarget) * 100, 100);
   const displayPercent = Math.max(percentage, 5); // Ensure at least 5% so text is visible over background
-  
+
   // Extract a single letter badge from the title (like 'A' in the image)
   const badgeLetter = title ? title.charAt(0).toUpperCase() : 'A';
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      
+
       <View style={styles.barRow}>
         <View style={styles.badgeIcon}>
           <Text style={styles.badgeText}>{badgeLetter}</Text>
@@ -41,16 +41,16 @@ export const TargetProgressBar: React.FC<TargetProgressBarProps> = ({
 
         <View style={styles.track}>
           {/* Filled Background */}
-          <View 
+          <View
             style={[
-              styles.trackFill, 
-              { 
+              styles.trackFill,
+              {
                 width: `${displayPercent}%`,
-                backgroundColor: isProfit ? '#10B981' : '#EF4444' 
+                backgroundColor: isProfit ? '#10B981' : '#EF4444'
               }
-            ]} 
+            ]}
           />
-          
+
           {/* Current amount text mapping inside the bar on the left */}
           <Text style={[styles.textInsideLeft, { zIndex: 10 }]}>
             {formatNumber(current, prefix, suffix)}

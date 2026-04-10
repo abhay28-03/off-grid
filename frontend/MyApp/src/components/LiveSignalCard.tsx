@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1c1c1e',
     borderColor: 'rgba(255, 255, 255, 0.05)',
     borderLeftWidth: 4,
-    borderRadius: 20,
+    borderRadius: 2,
     borderWidth: 1,
     marginBottom: 16,
     padding: 20,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   dot: {
-    borderRadius: 6,
+    borderRadius: 2,
     height: 12,
     marginRight: 8,
     width: 12,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   impactBox: {
     backgroundColor: '#27272a',
     borderColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 12,
+    borderRadius: 4,
     borderWidth: 1,
     marginTop: 16,
     padding: 14,

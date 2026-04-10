@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1c1c1e',
     borderColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 20,
+    borderRadius: 4,
     borderWidth: 1,
     padding: 20,
     marginBottom: 16,
@@ -90,14 +90,14 @@ const styles = StyleSheet.create({
   barTrack: {
     width: 24,
     backgroundColor: '#27272a',
-    borderRadius: 6,
+    borderRadius: 2,
     flex: 1,
     justifyContent: 'flex-end',
     overflow: 'hidden',
   },
   barFill: {
     backgroundColor: '#3b82f6', // Blueprint
-    borderRadius: 6,
+    borderRadius: 2,
     width: '100%',
   },
   barFillHighest: {

@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1c1c1e',
     borderColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 20,
+    borderRadius: 4,
     borderTopWidth: 4,
     borderWidth: 1,
     marginBottom: 16,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 10,
+    shadowRadius: 2,
     elevation: 5,
   },
   header: {

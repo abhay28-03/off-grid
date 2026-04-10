@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#18181b',
     borderColor: '#27272a',
-    borderRadius: 16,
+    borderRadius: 4,
     borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   statusBadge: {
     backgroundColor: '#27272a',
     borderColor: '#3f3f46',
-    borderRadius: 8,
+    borderRadius: 2,
     borderWidth: 1,
     paddingHorizontal: 8,
     paddingVertical: 4,

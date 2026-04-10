@@ -6,6 +6,7 @@ export interface StockUpdateCardProps {
   initialStock: number;
   initialSales: number;
   onUpdate: (newSales: number) => void;
+  style?: any;
 }
 
 export const StockUpdateCard: React.FC<StockUpdateCardProps> = ({
@@ -13,6 +14,7 @@ export const StockUpdateCard: React.FC<StockUpdateCardProps> = ({
   initialStock,
   initialSales,
   onUpdate,
+  style,
 }) => {
   const [sales, setSales] = useState(initialSales);
 
@@ -30,7 +32,7 @@ export const StockUpdateCard: React.FC<StockUpdateCardProps> = ({
   };
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, style]}>
       <View style={styles.header}>
         <Text style={styles.itemName}>{itemName}</Text>
         <View style={styles.badge}>
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1c1c1e',
     borderColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 20,
+    borderRadius: 4,
     borderWidth: 1,
     marginBottom: 16,
     padding: 20,
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: 8,
+    borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#27272a',
-    borderRadius: 12,
+    borderRadius: 4,
     padding: 4,
   },
   stepButton: {
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 4,
     backgroundColor: '#3f3f46',
   },
   stepButtonText: {
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     backgroundColor: '#3b82f6',
-    borderRadius: 12,
+    borderRadius: 4,
     paddingHorizontal: 16,
     height: 48,
     alignItems: 'center',

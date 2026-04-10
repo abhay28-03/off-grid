@@ -192,22 +192,6 @@ export const ownerMetrics: Metric[] = [
     trendValue: '2%',
     caption: 'Across all operations',
   },
-  {
-    id: 'top-item-sales',
-    title: 'Top Item (Kits)',
-    value: '180 sold',
-    trend: 'neutral',
-    trendValue: 'steady',
-    caption: 'Batteries and Controllers',
-  },
-  {
-    id: 'pending-decisions',
-    title: 'Pending Decisions',
-    value: '3',
-    trend: 'down',
-    trendValue: 'action needed',
-    caption: 'Awaiting your approval',
-  },
 ];
 
 export const employeeMetrics: Metric[] = [
@@ -220,28 +204,12 @@ export const employeeMetrics: Metric[] = [
     caption: 'Logged today',
   },
   {
-    id: 'daily-visits',
-    title: 'Active Visits',
-    value: '6',
-    trend: 'neutral',
-    trendValue: 'steady',
-    caption: '2 left on route',
-  },
-  {
     id: 'collections-emp',
     title: 'Collections',
     value: 'Rs 21.4K',
     trend: 'up',
     trendValue: 'good',
     caption: 'From completed visits',
-  },
-  {
-    id: 'sync-health',
-    title: 'App Status',
-    value: 'Online',
-    trend: 'neutral',
-    trendValue: 'synced',
-    caption: 'Last update: Just now',
   },
 ];
 

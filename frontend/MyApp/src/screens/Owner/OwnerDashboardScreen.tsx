@@ -6,11 +6,11 @@ import {
   View,
 } from 'react-native';
 
-import { ActionQueueItem } from '../../components/ActionQueueItem';
+import { AppsGrid } from '../../components/AppsGrid';
 import { MetricCard } from '../../components/MetricCard';
 import { TargetProgressBar } from '../../components/TargetProgressBar';
 import {
-  actionQueue,
+  ownerDashboardFeatures,
   ownerMetrics,
 } from '../../data/demoData';
 import type { FeatureId } from '../../data/demoData';
@@ -21,15 +21,21 @@ interface OwnerDashboardScreenProps {
   onOpenFeature?: (featureId: OwnerDashboardFeatureId) => void;
 }
 
-export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = () => {
-  const urgentActions = actionQueue.slice(0, 4);
-
+export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({ onOpenFeature }) => {
   return (
     <ScrollView
       style={styles.screen}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+      <View style={styles.header}>
+        <Text style={styles.title}>Workspace</Text>
+        <Text style={styles.subtitle}>
+          Your high level operations and connected apps.
+        </Text>
+      </View>
+
+      <Text style={styles.sectionTitle}>Overview</Text>
       <TargetProgressBar
         title="Daily Revenue Target"
         current={84200}
@@ -50,17 +56,9 @@ export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = () => {
         ))}
       </View>
 
-      <Text style={styles.sectionTitle}>Action queue</Text>
-      {urgentActions.map(action => (
-        <ActionQueueItem
-          key={action.id}
-          title={action.title}
-          detail={action.detail}
-          owner={action.owner}
-          dueLabel={action.dueLabel}
-          priority={action.priority}
-        />
-      ))}
+      <Text style={styles.sectionTitle}>Apps</Text>
+      <AppsGrid features={ownerDashboardFeatures} onOpenFeature={onOpenFeature || (() => {})} />
+
       <View style={{ height: 60 }} />
     </ScrollView>
   );
@@ -78,20 +76,13 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 24,
   },
-  eyebrow: {
-    color: '#10B981',
-    fontSize: 13,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-    marginBottom: 8,
-    textTransform: 'uppercase',
-  },
   title: {
     color: '#fafafa',
     fontSize: 32,
     fontWeight: '800',
     lineHeight: 38,
     marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
     color: '#a1a1aa',
@@ -110,5 +101,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginBottom: 16,
     marginTop: 12,
+    letterSpacing: -0.3,
   },
 });

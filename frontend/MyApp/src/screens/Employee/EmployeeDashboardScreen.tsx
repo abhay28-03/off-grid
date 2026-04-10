@@ -1,17 +1,18 @@
 import React from 'react';
 import {
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 
-import { ActionQueueItem } from '../../components/ActionQueueItem';
+import { AppsGrid } from '../../components/AppsGrid';
 import { MetricCard } from '../../components/MetricCard';
 import { StockUpdateCard } from '../../components/StockUpdateCard';
 import { TargetProgressBar } from '../../components/TargetProgressBar';
 import {
-  actionQueue,
+  employeeDashboardFeatures,
   employeeMetrics,
 } from '../../data/demoData';
 import type { FeatureId } from '../../data/demoData';
@@ -29,9 +30,7 @@ interface EmployeeDashboardScreenProps {
   onOpenFeature?: (featureId: FeatureId) => void;
 }
 
-export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = () => {
-  const assignedActions = actionQueue.slice(1, 3); // Slightly trim action queue to declutter
-
+export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = ({ onOpenFeature }) => {
   const handleStockUpdate = (newSales: number) => {
     console.log('Stock updated:', newSales);
   };
@@ -49,6 +48,7 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
         </Text>
       </View>
 
+      <Text style={styles.sectionTitle}>Overview</Text>
       <TargetProgressBar
         title="Daily Collections Target"
         current={21400}
@@ -70,24 +70,33 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
       </View>
 
       <Text style={styles.sectionTitle}>Stock Management</Text>
-      <StockUpdateCard
-        itemName="Battery Pack Kits"
-        initialStock={42}
-        initialSales={3}
-        onUpdate={handleStockUpdate}
+      <FlatList
+        data={[
+          { id: '1', name: 'Battery Pack Kits', stock: 42, sales: 3 },
+          { id: '2', name: 'Solar Controller', stock: 15, sales: 0 },
+          { id: '3', name: 'Water Filters', stock: 8, sales: 1 },
+        ]}
+        keyExtractor={item => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={296} // 280 width + 16 gap
+        decelerationRate="fast"
+        contentContainerStyle={styles.horizontalScrollContent}
+        style={styles.horizontalScroll}
+        renderItem={({ item }) => (
+          <StockUpdateCard
+            itemName={item.name}
+            initialStock={item.stock}
+            initialSales={item.sales}
+            onUpdate={handleStockUpdate}
+            style={{ width: 280, marginRight: 16 }}
+          />
+        )}
       />
 
-      <Text style={styles.sectionTitle}>My Action Queue</Text>
-      {assignedActions.map(action => (
-        <ActionQueueItem
-          key={action.id}
-          title={action.title}
-          detail={action.detail}
-          owner={action.owner}
-          dueLabel={action.dueLabel}
-          priority={action.priority}
-        />
-      ))}
+      <Text style={styles.sectionTitle}>Apps</Text>
+      <AppsGrid features={employeeDashboardFeatures} onOpenFeature={onOpenFeature || (() => {})} />
+
       <View style={{ height: 60 }} />
     </ScrollView>
   );
@@ -131,5 +140,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     marginTop: 16,
     letterSpacing: -0.3,
+  },
+  horizontalScroll: {
+    marginHorizontal: -20,
+  },
+  horizontalScrollContent: {
+    paddingHorizontal: 20,
   },
 });
