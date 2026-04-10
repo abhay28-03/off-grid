@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+import json
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from database import supabase  # Import the client we just created
@@ -60,3 +61,54 @@ def create_item(item: ItemCreate):
         return {"message": "Item added successfully", "data": response.data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# --- Real-Time Employee Tracking (WebSockets) ---
+
+class ConnectionManager:
+    def __init__(self):
+        # We store all connected clients here (Owners observing, Employees sending)
+        self.active_connections: list[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: dict):
+        for connection in self.active_connections:
+            try:
+                await connection.send_json(message)
+            except RuntimeError:
+                pass
+
+manager = ConnectionManager()
+
+@app.websocket("/ws/v1/tracking/live")
+async def websocket_tracking_endpoint(websocket: WebSocket):
+    """
+    WebSocket endpoint for live employee tracking.
+    Employees connect and stream their GPS coordinates.
+    Owners connect to listen to these location streams in real-time.
+    """
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            
+            try:
+                location_data = json.loads(data)
+            except json.JSONDecodeError:
+                location_data = {"error": "Invalid JSON", "raw": data}
+
+            await manager.broadcast(location_data)
+
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+        await manager.broadcast({
+            "type": "status", 
+            "status": "offline",
+            "message": "Tracker disconnected"
+        })

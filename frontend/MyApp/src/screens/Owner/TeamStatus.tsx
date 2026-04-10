@@ -20,7 +20,7 @@ export const TeamStatus = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.kicker}>Team status</Text>
+      <Text style={styles.kicker}>Staff Availability</Text>
       <Text style={styles.title}>All team members</Text>
       <Text style={styles.subtitle}>
         Real-time workload, location, and shift readiness at a glance.

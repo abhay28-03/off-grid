@@ -1,33 +1,84 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { MapPin } from 'lucide-react-native';
 
 import { fieldRoutes, teamMembers } from '../../data/demoData';
 
+const WS_URL = 'ws://localhost:8000/ws/v1/tracking/live';
+
 export const MapTrackingScreen = () => {
+  const [pins, setPins] = useState({
+    north: { top: 36, left: 24 },
+    sector: { top: 96, left: 220 },
+    west: { top: 160, left: 78 },
+  });
+
+  const [wsStatus, setWsStatus] = useState('Connecting...');
+  const ws = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    ws.current = new WebSocket(WS_URL);
+
+    ws.current.onopen = () => setWsStatus('Connected (Live)');
+
+    ws.current.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.id && data.top !== undefined && data.left !== undefined) {
+          setPins(prev => ({
+            ...prev,
+            [data.id]: { top: data.top, left: data.left }
+          }));
+        }
+      } catch (err) { }
+    };
+
+    ws.current.onerror = () => setWsStatus('Error Connecting');
+    ws.current.onclose = () => setWsStatus('Disconnected');
+
+    return () => ws.current?.close();
+  }, []);
+
+  const simulateEmployeeBroadcast = () => {
+    if (!ws.current || ws.current.readyState !== WebSocket.OPEN) return;
+
+    // Simulate North employee walking towards the center
+    const newTop = pins.north.top + (Math.random() * 15 - 5);
+    const newLeft = pins.north.left + (Math.random() * 20 - 5);
+
+    ws.current.send(JSON.stringify({
+      id: 'north',
+      top: Math.max(0, Math.min(200, newTop)),
+      left: Math.max(0, Math.min(300, newLeft))
+    }));
+  };
+
   return (
     <ScrollView
       style={styles.screen}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.kicker}>Field ops map</Text>
-      <Text style={styles.title}>Live coverage without a map SDK yet.</Text>
-      <Text style={styles.subtitle}>
-        A hardcoded operations map mockup for routes, offline queues, and coverage
-        gaps.
-      </Text>
 
       <View style={styles.mapMockup}>
-        <View style={[styles.pin, styles.pinNorth]}>
+        <View style={[styles.pin, { top: pins.north.top, left: pins.north.left }]}>
+          <MapPin size={28} color="#10B981" fill="#10B981" />
           <Text style={styles.pinText}>North</Text>
         </View>
-        <View style={[styles.pin, styles.pinSector]}>
+        <View style={[styles.pin, { top: pins.sector.top, left: pins.sector.left }]}>
+          <MapPin size={28} color="#EF4444" fill="#EF4444" />
           <Text style={styles.pinText}>Sector 12</Text>
         </View>
-        <View style={[styles.pin, styles.pinWest]}>
+        <View style={[styles.pin, { top: pins.west.top, left: pins.west.left }]}>
+          <MapPin size={28} color="#F59E0B" fill="#F59E0B" />
           <Text style={styles.pinText}>West Hub</Text>
         </View>
-        <Text style={styles.mapCaption}>Live route simulation</Text>
+        {wsStatus.includes('Live') && (
+          <View style={styles.liveIndicator}>
+            <View style={styles.liveDot} />
+            <Text style={styles.liveText}>GPS LIVE</Text>
+          </View>
+        )}
       </View>
 
       <Text style={styles.sectionTitle}>Route exceptions</Text>
@@ -87,48 +138,82 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   mapMockup: {
-    alignItems: 'center',
-    backgroundColor: '#E0F2FE',
-    borderColor: '#BAE6FD',
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
     borderRadius: 8,
     borderWidth: 1,
     height: 240,
-    justifyContent: 'center',
-    marginBottom: 18,
+    marginBottom: 24,
+    marginTop: 8,
     overflow: 'hidden',
+    position: 'relative',
   },
+  liveIndicator: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#09090b80',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#27272a',
+  },
+  liveDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#10B981',
+    marginRight: 6,
+  },
+  liveText: {
+    color: '#10B981',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  statusLive: { backgroundColor: '#10B981' },
+  statusOffline: { backgroundColor: '#EF4444' },
+  statusText: { color: '#fff', fontSize: 10, fontWeight: '800', textTransform: 'uppercase' },
   pin: {
     alignItems: 'center',
-    borderRadius: 8,
     justifyContent: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
     position: 'absolute',
   },
-  pinNorth: {
-    backgroundColor: '#0F766E',
-    left: 24,
-    top: 36,
-  },
-  pinSector: {
-    backgroundColor: '#BE123C',
-    right: 24,
-    top: 96,
-  },
-  pinWest: {
-    backgroundColor: '#B45309',
-    bottom: 42,
-    left: 78,
-  },
   pinText: {
-    color: '#18181b',
-    fontSize: 12,
+    color: '#fafafa',
+    fontSize: 11,
     fontWeight: '800',
+    marginTop: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   mapCaption: {
     color: '#075985',
     fontSize: 16,
     fontWeight: '800',
+  },
+  broadcastButton: {
+    backgroundColor: '#FAF9F6',
+    paddingVertical: 14,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#e4e4e7',
+  },
+  broadcastButtonText: {
+    color: '#09090b',
+    fontWeight: '800',
+    fontSize: 14,
   },
   sectionTitle: {
     color: '#fafafa',
