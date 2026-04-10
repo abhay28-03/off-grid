@@ -3,14 +3,15 @@ node_modules/
 npm-debug.log
 
 # React Native
-android/
-ios/
 build/
+*.jsbundle
 
 # Python
 venv/
 __pycache__/
 *.pyc
+.pytest_cache/
+pytest-cache-files-*/
 
 # Env
 .env
