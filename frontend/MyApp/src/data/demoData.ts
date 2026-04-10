@@ -44,6 +44,12 @@ export type Metric = {
   caption: string;
 };
 
+export type SalesDataPoint = {
+  day: string;
+  sales: number;
+};
+
+
 export type Transaction = {
   id: string;
   accountName: string;
@@ -171,72 +177,80 @@ export const employeeDashboardFeatures: DashboardFeature[] = [
 
 export const ownerMetrics: Metric[] = [
   {
-    id: 'cash-collected',
-    title: 'Cash collected',
-    value: 'Rs 84.2K',
+    id: 'weekly-revenue',
+    title: 'Weekly Revenue',
+    value: 'Rs 520K',
     trend: 'up',
-    trendValue: '18%',
-    caption: 'Today across 3 workstreams',
+    trendValue: '12%',
+    caption: 'Compared to last week',
+  },
+  {
+    id: 'profit-margin',
+    title: 'Profit Margin',
+    value: '24%',
+    trend: 'up',
+    trendValue: '2%',
+    caption: 'Across all operations',
+  },
+  {
+    id: 'top-item-sales',
+    title: 'Top Item (Kits)',
+    value: '180 sold',
+    trend: 'neutral',
+    trendValue: 'steady',
+    caption: 'Batteries and Controllers',
   },
   {
     id: 'pending-decisions',
-    title: 'Pending decisions',
-    value: '5',
+    title: 'Pending Decisions',
+    value: '3',
     trend: 'down',
-    trendValue: '2 cleared',
-    caption: 'Approvals and exceptions',
-  },
-  {
-    id: 'active-jobs',
-    title: 'Active jobs',
-    value: '18',
-    trend: 'neutral',
-    trendValue: 'steady',
-    caption: 'Field, client, and service work',
-  },
-  {
-    id: 'offline-queue',
-    title: 'Offline queue',
-    value: '11',
-    trend: 'down',
-    trendValue: 'syncing',
-    caption: 'Updates waiting to sync',
+    trendValue: 'action needed',
+    caption: 'Awaiting your approval',
   },
 ];
 
 export const employeeMetrics: Metric[] = [
   {
-    id: 'my-tasks',
-    title: 'My tasks',
-    value: '6',
-    trend: 'neutral',
-    trendValue: 'active',
-    caption: '2 need confirmation',
+    id: 'items-sold',
+    title: 'Items Sold',
+    value: '42',
+    trend: 'up',
+    trendValue: 'on pace',
+    caption: 'Logged today',
   },
   {
-    id: 'collections',
+    id: 'daily-visits',
+    title: 'Active Visits',
+    value: '6',
+    trend: 'neutral',
+    trendValue: 'steady',
+    caption: '2 left on route',
+  },
+  {
+    id: 'collections-emp',
     title: 'Collections',
     value: 'Rs 21.4K',
     trend: 'up',
-    trendValue: 'on pace',
-    caption: 'Logged from field work',
-  },
-  {
-    id: 'visits-left',
-    title: 'Visits left',
-    value: '4',
-    trend: 'down',
-    trendValue: '3 done',
-    caption: 'Route ends at 6:30 PM',
+    trendValue: 'good',
+    caption: 'From completed visits',
   },
   {
     id: 'sync-health',
-    title: 'Sync health',
-    value: 'Good',
+    title: 'App Status',
+    value: 'Online',
     trend: 'neutral',
-    trendValue: '2 min',
-    caption: 'Last local update',
+    trendValue: 'synced',
+    caption: 'Last update: Just now',
   },
+];
+
+export const salesData: SalesDataPoint[] = [
+  { day: 'Mon', sales: 45 },
+  { day: 'Tue', sales: 52 },
+  { day: 'Wed', sales: 38 },
+  { day: 'Thu', sales: 65 },
+  { day: 'Fri', sales: 84 },
 ];
 
 export const liveSignals: LiveSignal[] = [

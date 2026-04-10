@@ -45,22 +45,27 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#18181b',
-    borderColor: '#27272a',
-    borderRadius: 16,
+    backgroundColor: '#1c1c1e',
+    borderColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 20,
     borderWidth: 1,
     flexBasis: '48%',
     flexGrow: 1,
-    marginBottom: 12,
+    marginBottom: 16,
     minWidth: 150,
     padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
   },
   title: {
     color: '#a1a1aa',
-    fontSize: 12,
-    fontWeight: '800',
+    fontSize: 13,
+    fontWeight: '700',
     letterSpacing: 0.5,
-    marginBottom: 8,
+    marginBottom: 10,
     textTransform: 'uppercase',
   },
   valueRow: {
@@ -71,13 +76,13 @@ const styles = StyleSheet.create({
   },
   value: {
     color: '#fafafa',
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: '800',
-    letterSpacing: 0,
+    letterSpacing: -0.5,
     marginRight: 8,
   },
   trendBadge: {
-    borderRadius: 8,
+    borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
@@ -88,8 +93,8 @@ const styles = StyleSheet.create({
   },
   caption: {
     color: '#71717a',
-    fontSize: 13,
-    lineHeight: 18,
-    marginTop: 8,
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 10,
   },
 });

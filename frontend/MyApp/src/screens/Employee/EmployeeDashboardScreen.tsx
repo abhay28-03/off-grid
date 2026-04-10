@@ -8,6 +8,7 @@ import {
 
 import { ActionQueueItem } from '../../components/ActionQueueItem';
 import { MetricCard } from '../../components/MetricCard';
+import { StockUpdateCard } from '../../components/StockUpdateCard';
 import { TargetProgressBar } from '../../components/TargetProgressBar';
 import {
   actionQueue,
@@ -29,7 +30,11 @@ interface EmployeeDashboardScreenProps {
 }
 
 export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = () => {
-  const assignedActions = actionQueue.slice(1, 4);
+  const assignedActions = actionQueue.slice(1, 3); // Slightly trim action queue to declutter
+
+  const handleStockUpdate = (newSales: number) => {
+    console.log('Stock updated:', newSales);
+  };
 
   return (
     <ScrollView
@@ -38,9 +43,9 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.header}>
-        <Text style={styles.title}>Overview</Text>
+        <Text style={styles.title}>Employee Portal</Text>
         <Text style={styles.subtitle}>
-          Today's operational metrics and active queue.
+          Today's operational metrics, tasks, and stock log.
         </Text>
       </View>
 
@@ -64,7 +69,15 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
         ))}
       </View>
 
-      <Text style={styles.sectionTitle}>My action queue</Text>
+      <Text style={styles.sectionTitle}>Stock Management</Text>
+      <StockUpdateCard
+        itemName="Battery Pack Kits"
+        initialStock={42}
+        initialSales={3}
+        onUpdate={handleStockUpdate}
+      />
+
+      <Text style={styles.sectionTitle}>My Action Queue</Text>
       {assignedActions.map(action => (
         <ActionQueueItem
           key={action.id}
@@ -92,20 +105,13 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 24,
   },
-  eyebrow: {
-    color: '#3B82F6',
-    fontSize: 13,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-    marginBottom: 8,
-    textTransform: 'uppercase',
-  },
   title: {
     color: '#fafafa',
     fontSize: 32,
     fontWeight: '800',
     lineHeight: 38,
     marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
     color: '#a1a1aa',
@@ -116,13 +122,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   sectionTitle: {
     color: '#fafafa',
     fontSize: 20,
     fontWeight: '800',
     marginBottom: 16,
-    marginTop: 12,
+    marginTop: 16,
+    letterSpacing: -0.3,
   },
 });

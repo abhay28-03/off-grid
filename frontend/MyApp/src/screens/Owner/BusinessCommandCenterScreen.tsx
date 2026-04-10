@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { ActionQueueItem } from '../../components/ActionQueueItem';
 import { LiveSignalCard } from '../../components/LiveSignalCard';
 import { PulseMetricCard } from '../../components/PulseMetricCard';
-import { actionQueue, liveSignals, ownerMetrics } from '../../data/demoData';
+import { SalesBarChart } from '../../components/SalesBarChart';
+import { liveSignals, ownerMetrics, salesData } from '../../data/demoData';
 
 export const BusinessCommandCenterScreen = () => {
   return (
@@ -13,7 +13,10 @@ export const BusinessCommandCenterScreen = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>Business pulse for the next decision.</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Owner Dashboard</Text>
+        <Text style={styles.subtitle}>Key metrics and top item performance.</Text>
+      </View>
 
       <View style={styles.pulseGrid}>
         {ownerMetrics.map(metric => (
@@ -27,8 +30,10 @@ export const BusinessCommandCenterScreen = () => {
         ))}
       </View>
 
-      <Text style={styles.sectionTitle}>Live signals</Text>
-      {liveSignals.slice(0, 2).map(signal => (
+      <SalesBarChart title="Battery Pack Kits Sales" data={salesData} />
+
+      {/* Showing only 1 critical signal to prevent overwhelming the owner */}
+      {liveSignals.slice(0, 1).map(signal => (
         <LiveSignalCard
           key={signal.id}
           title={signal.title}
@@ -41,18 +46,8 @@ export const BusinessCommandCenterScreen = () => {
           actionLabel={signal.actionLabel}
         />
       ))}
-
-      <Text style={styles.sectionTitle}>Decision queue</Text>
-      {actionQueue.slice(0, 3).map(action => (
-        <ActionQueueItem
-          key={action.id}
-          title={action.title}
-          detail={action.detail}
-          owner={action.owner}
-          dueLabel={action.dueLabel}
-          priority={action.priority}
-        />
-      ))}
+      
+      <View style={{ height: 40 }} />
     </ScrollView>
   );
 };
@@ -66,35 +61,23 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 32,
   },
-  kicker: {
-    color: '#0F766E',
-    fontSize: 13,
-    fontWeight: '800',
-    letterSpacing: 0,
-    marginBottom: 8,
-    textTransform: 'uppercase',
+  header: {
+    marginBottom: 24,
   },
   title: {
     color: '#fafafa',
-    fontSize: 29,
+    fontSize: 32,
     fontWeight: '800',
-    lineHeight: 35,
+    lineHeight: 38,
     marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
     color: '#a1a1aa',
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: 18,
+    fontSize: 16,
+    lineHeight: 24,
   },
   pulseGrid: {
     marginBottom: 8,
-  },
-  sectionTitle: {
-    color: '#fafafa',
-    fontSize: 17,
-    fontWeight: '800',
-    marginBottom: 10,
-    marginTop: 12,
   },
 });
