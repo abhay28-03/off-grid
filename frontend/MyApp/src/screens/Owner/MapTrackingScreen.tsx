@@ -1,43 +1,198 @@
 import React from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import { CustomButton } from '../../components/CustomButton';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+
+import { fieldRoutes, teamMembers } from '../../data/demoData';
 
 export const MapTrackingScreen = () => {
-  // In a real app, this would use react-native-maps and real-time WebSocket data
-  const handleAssignArea = (area: string) => {
-    Alert.alert(
-      "Assign Employee",
-      `Send alert to nearest employee to cover ${area}? If they decline, it will route to the next available employee.`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Dispatch", onPress: () => console.log(`Alert sent for ${area}`) }
-      ]
-    );
-  };
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Live Store Heatmap</Text>
-      
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
+      <Text style={styles.kicker}>Field ops map</Text>
+      <Text style={styles.title}>Live coverage without a map SDK yet.</Text>
+      <Text style={styles.subtitle}>
+        A hardcoded operations map mockup for routes, offline queues, and coverage
+        gaps.
+      </Text>
+
       <View style={styles.mapMockup}>
-        <Text style={styles.mapText}>[ Map view displaying employee coordinates ]</Text>
-        <View style={styles.unattendedZone}>
-          <Text style={{color: '#fff'}}>Section B is Empty!</Text>
+        <View style={[styles.pin, styles.pinNorth]}>
+          <Text style={styles.pinText}>North</Text>
         </View>
+        <View style={[styles.pin, styles.pinSector]}>
+          <Text style={styles.pinText}>Sector 12</Text>
+        </View>
+        <View style={[styles.pin, styles.pinWest]}>
+          <Text style={styles.pinText}>West Hub</Text>
+        </View>
+        <Text style={styles.mapCaption}>Live route simulation</Text>
       </View>
 
-      <Text style={styles.subHeader}>Quick Actions</Text>
-      <CustomButton title="Send Staff to Section A" onPress={() => handleAssignArea('Section A')} />
-      <CustomButton title="Send Staff to Section B" onPress={() => handleAssignArea('Section B')} variant="danger" />
-    </View>
+      <Text style={styles.sectionTitle}>Route exceptions</Text>
+      {fieldRoutes.map(route => (
+        <View key={route.id} style={styles.routeCard}>
+          <View style={styles.routeHeader}>
+            <Text style={styles.routeArea}>{route.area}</Text>
+            <Text style={styles.routeEta}>{route.eta}</Text>
+          </View>
+          <Text style={styles.routeStatus}>{route.status}</Text>
+          <Text style={styles.routeIssue}>{route.issue}</Text>
+          <Text style={styles.routeLead}>Lead: {route.lead}</Text>
+        </View>
+      ))}
+
+      <Text style={styles.sectionTitle}>Available team</Text>
+      {teamMembers.slice(0, 3).map(member => (
+        <View key={member.id} style={styles.memberRow}>
+          <Text style={styles.memberName}>{member.name}</Text>
+          <Text style={styles.memberDetail}>
+            {member.status} at {member.location}
+          </Text>
+        </View>
+      ))}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  header: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
-  subHeader: { fontSize: 18, marginTop: 20, marginBottom: 10 },
-  mapMockup: { height: 300, backgroundColor: '#e9ecef', justifyContent: 'center', alignItems: 'center', borderRadius: 10 },
-  mapText: { color: '#6c757d' },
-  unattendedZone: { position: 'absolute', top: 50, right: 50, backgroundColor: 'red', padding: 10, borderRadius: 5 },
+  screen: {
+    backgroundColor: '#F5F7FA',
+    flex: 1,
+  },
+  content: {
+    padding: 20,
+    paddingBottom: 32,
+  },
+  kicker: {
+    color: '#2563EB',
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 0,
+    marginBottom: 8,
+    textTransform: 'uppercase',
+  },
+  title: {
+    color: '#111827',
+    fontSize: 28,
+    fontWeight: '800',
+    lineHeight: 34,
+    marginBottom: 8,
+  },
+  subtitle: {
+    color: '#4B5563',
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 18,
+  },
+  mapMockup: {
+    alignItems: 'center',
+    backgroundColor: '#E0F2FE',
+    borderColor: '#BAE6FD',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 240,
+    justifyContent: 'center',
+    marginBottom: 18,
+    overflow: 'hidden',
+  },
+  pin: {
+    alignItems: 'center',
+    borderRadius: 8,
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    position: 'absolute',
+  },
+  pinNorth: {
+    backgroundColor: '#0F766E',
+    left: 24,
+    top: 36,
+  },
+  pinSector: {
+    backgroundColor: '#BE123C',
+    right: 24,
+    top: 96,
+  },
+  pinWest: {
+    backgroundColor: '#B45309',
+    bottom: 42,
+    left: 78,
+  },
+  pinText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  mapCaption: {
+    color: '#075985',
+    fontSize: 16,
+    fontWeight: '800',
+  },
+  sectionTitle: {
+    color: '#111827',
+    fontSize: 17,
+    fontWeight: '800',
+    marginBottom: 10,
+    marginTop: 12,
+  },
+  routeCard: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 12,
+    padding: 16,
+  },
+  routeHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  routeArea: {
+    color: '#111827',
+    fontSize: 17,
+    fontWeight: '800',
+  },
+  routeEta: {
+    color: '#2563EB',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  routeStatus: {
+    color: '#4B5563',
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  routeIssue: {
+    color: '#BE123C',
+    fontSize: 13,
+    fontWeight: '800',
+    marginTop: 6,
+  },
+  routeLead: {
+    color: '#64748B',
+    fontSize: 13,
+    marginTop: 6,
+  },
+  memberRow: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 10,
+    padding: 14,
+  },
+  memberName: {
+    color: '#111827',
+    fontSize: 15,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  memberDetail: {
+    color: '#4B5563',
+    fontSize: 14,
+  },
 });

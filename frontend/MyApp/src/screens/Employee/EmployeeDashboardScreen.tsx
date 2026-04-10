@@ -7,6 +7,15 @@ import {
   View,
 } from 'react-native';
 
+import { ActionQueueItem } from '../../components/ActionQueueItem';
+import { MetricCard } from '../../components/MetricCard';
+import {
+  actionQueue,
+  employeeDashboardFeatures,
+  employeeMetrics,
+} from '../../data/demoData';
+import type { FeatureId } from '../../data/demoData';
+
 export type EmployeeDashboardFeatureId =
   | 'team-pulse'
   | 'revenue-stream'
@@ -16,65 +25,15 @@ export type EmployeeDashboardFeatureId =
   | 'ops-timeline'
   | 'live-signal-desk';
 
-type EmployeeDashboardFeature = {
-  id: EmployeeDashboardFeatureId;
-  title: string;
-  summary: string;
-  status: string;
-};
-
 interface EmployeeDashboardScreenProps {
-  onOpenFeature?: (featureId: EmployeeDashboardFeatureId) => void;
+  onOpenFeature?: (featureId: FeatureId) => void;
 }
-
-const employeeFeatures: EmployeeDashboardFeature[] = [
-  {
-    id: 'team-pulse',
-    title: 'Team Pulse',
-    summary: 'Check your shift, assigned work, and team updates.',
-    status: 'Start here',
-  },
-  {
-    id: 'revenue-stream',
-    title: 'Revenue Stream',
-    summary: 'Capture sales activity and recent payment updates.',
-    status: 'Open',
-  },
-  {
-    id: 'workflow-pulse',
-    title: 'Workflow Pulse',
-    summary: 'Move tasks forward and flag blockers in real time.',
-    status: '6 tasks',
-  },
-  {
-    id: 'field-ops-map',
-    title: 'Field Ops Map',
-    summary: 'View assigned routes, visits, and live location work.',
-    status: 'Tracking',
-  },
-  {
-    id: 'client-pulse',
-    title: 'Client Pulse',
-    summary: 'See follow-ups, client notes, and urgent account activity.',
-    status: '3 updates',
-  },
-  {
-    id: 'ops-timeline',
-    title: 'Ops Timeline',
-    summary: 'Review the latest business events from your workday.',
-    status: 'Today',
-  },
-  {
-    id: 'live-signal-desk',
-    title: 'Signal Desk',
-    summary: 'Catch important changes that affect your current work.',
-    status: 'Live',
-  },
-];
 
 export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = ({
   onOpenFeature,
 }) => {
+  const assignedActions = actionQueue.slice(1, 4);
+
   return (
     <ScrollView
       style={styles.screen}
@@ -83,36 +42,63 @@ export const EmployeeDashboardScreen: React.FC<EmployeeDashboardScreenProps> = (
     >
       <View style={styles.header}>
         <Text style={styles.eyebrow}>Employee workspace</Text>
-        <Text style={styles.title}>Your workday, live.</Text>
+        <Text style={styles.title}>Your shift, signals, and actions.</Text>
         <Text style={styles.subtitle}>
-          Open tasks, client updates, sales activity, routes, and team signals.
+          Work from live task flow, route status, client updates, and offline sync
+          health.
         </Text>
       </View>
 
+      <View style={styles.metricsGrid}>
+        {employeeMetrics.map(metric => (
+          <MetricCard
+            key={metric.id}
+            title={metric.title}
+            value={metric.value}
+            trend={metric.trend}
+            trendValue={metric.trendValue}
+            caption={metric.caption}
+          />
+        ))}
+      </View>
+
+      <Text style={styles.sectionTitle}>Feature access</Text>
       <View style={styles.grid}>
-        {employeeFeatures.map(feature => (
+        {employeeDashboardFeatures.map(feature => (
           <TouchableOpacity
             key={feature.id}
-            activeOpacity={0.75}
+            activeOpacity={0.78}
             style={styles.featureCard}
             onPress={() => onOpenFeature?.(feature.id)}
           >
             <View style={styles.featureHeader}>
               <Text style={styles.featureTitle}>{feature.title}</Text>
-              <Text style={styles.status}>{feature.status}</Text>
+              <Text style={styles.signal}>{feature.signal}</Text>
             </View>
             <Text style={styles.featureSummary}>{feature.summary}</Text>
           </TouchableOpacity>
         ))}
       </View>
+
+      <Text style={styles.sectionTitle}>My action queue</Text>
+      {assignedActions.map(action => (
+        <ActionQueueItem
+          key={action.id}
+          title={action.title}
+          detail={action.detail}
+          owner={action.owner}
+          dueLabel={action.dueLabel}
+          priority={action.priority}
+        />
+      ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
+    backgroundColor: '#F5F7FA',
     flex: 1,
-    backgroundColor: '#f6f8fb',
   },
   content: {
     padding: 20,
@@ -122,32 +108,47 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   eyebrow: {
-    color: '#be123c',
+    color: '#BE123C',
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: 0,
     marginBottom: 8,
     textTransform: 'uppercase',
   },
   title: {
     color: '#111827',
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '800',
-    lineHeight: 34,
+    lineHeight: 36,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#526071',
+    color: '#4B5563',
     fontSize: 15,
     lineHeight: 22,
   },
+  metricsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  sectionTitle: {
+    color: '#111827',
+    fontSize: 17,
+    fontWeight: '800',
+    marginBottom: 10,
+    marginTop: 12,
+  },
   grid: {
-    gap: 12,
+    marginBottom: 8,
   },
   featureCard: {
-    backgroundColor: '#ffffff',
-    borderColor: '#d9e2ec',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E7EB',
     borderRadius: 8,
     borderWidth: 1,
+    marginBottom: 12,
     padding: 16,
   },
   featureHeader: {
@@ -157,20 +158,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   featureTitle: {
-    color: '#172033',
+    color: '#111827',
     flex: 1,
     fontSize: 17,
     fontWeight: '800',
     marginRight: 12,
   },
-  status: {
-    color: '#be123c',
+  signal: {
+    color: '#BE123C',
     fontSize: 12,
     fontWeight: '800',
+    letterSpacing: 0,
     textTransform: 'uppercase',
   },
   featureSummary: {
-    color: '#5b6778',
+    color: '#4B5563',
     fontSize: 14,
     lineHeight: 20,
   },

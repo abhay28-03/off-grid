@@ -1,46 +1,59 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+
+import type { TransactionDirection } from '../data/demoData';
 
 export interface TransactionEntry {
   id: string;
-  partyName: string;
+  accountName: string;
   amount: number;
-  type: 'given' | 'taken';
-  date: string;
-  description?: string;
+  direction: TransactionDirection;
+  category: string;
+  timestamp: string;
+  note?: string;
+  status?: string;
 }
 
 interface TransactionCardProps {
   entry: TransactionEntry;
 }
 
-export const TransactionCard: React.FC<TransactionCardProps> = ({ entry }) => {
-  const isGiven = entry.type === 'given';
-  
-  // Format amount to INR natively
-  const formattedAmount = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
+const formatAmount = (amount: number) =>
+  new Intl.NumberFormat('en-IN', {
     currency: 'INR',
     maximumFractionDigits: 0,
-  }).format(entry.amount);
+    style: 'currency',
+  }).format(amount);
+
+export const TransactionCard: React.FC<TransactionCardProps> = ({ entry }) => {
+  const isInflow = entry.direction === 'inflow';
+  const amountColor = isInflow ? '#0F766E' : '#BE123C';
 
   return (
     <View style={styles.card}>
       <View style={styles.leftColumn}>
-        <Text style={styles.partyName} numberOfLines={1}>{entry.partyName}</Text>
-        <Text style={styles.date}>{entry.date}</Text>
-        {entry.description ? (
-          <Text style={styles.description} numberOfLines={2}>{entry.description}</Text>
+        <Text style={styles.category}>{entry.category}</Text>
+        <Text style={styles.accountName} numberOfLines={1}>
+          {entry.accountName}
+        </Text>
+        {entry.note ? (
+          <Text style={styles.note} numberOfLines={2}>
+            {entry.note}
+          </Text>
         ) : null}
+        <Text style={styles.timestamp}>{entry.timestamp}</Text>
       </View>
-      
+
       <View style={styles.rightColumn}>
-        <Text style={[styles.amount, { color: isGiven ? '#dc3545' : '#28a745' }]}>
-          {isGiven ? '-' : '+'} {formattedAmount}
+        <Text style={[styles.amount, { color: amountColor }]}>
+          {isInflow ? '+' : '-'}
+          {formatAmount(entry.amount)}
         </Text>
-        <Text style={[styles.typeText, { color: isGiven ? '#dc3545' : '#28a745' }]}>
-          {isGiven ? 'You Gave' : 'You Got'}
-        </Text>
+        {entry.status ? (
+          <View style={styles.statusBadge}>
+            <Text style={styles.statusText}>{entry.status}</Text>
+          </View>
+        ) : null}
       </View>
     </View>
   );
@@ -48,56 +61,69 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({ entry }) => {
 
 const styles = StyleSheet.create({
   card: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
     marginBottom: 12,
-    elevation: 2, // Shadow for Android
-    shadowColor: '#000', // Shadows for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    borderWidth: 1,
-    borderColor: '#f1f3f5',
+    padding: 16,
   },
   leftColumn: {
     flex: 1,
-    marginRight: 15,
     justifyContent: 'center',
+    marginRight: 16,
   },
-  partyName: {
+  category: {
+    color: '#0F766E',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 0,
+    marginBottom: 4,
+    textTransform: 'uppercase',
+  },
+  accountName: {
+    color: '#111827',
     fontSize: 16,
-    fontWeight: '700',
-    color: '#212529',
+    fontWeight: '800',
+    letterSpacing: 0,
     marginBottom: 4,
   },
-  date: {
-    fontSize: 12,
-    color: '#6c757d',
-    marginBottom: 2,
+  note: {
+    color: '#4B5563',
+    fontSize: 14,
+    lineHeight: 19,
+    marginBottom: 6,
   },
-  description: {
-    fontSize: 13,
-    color: '#495057',
-    marginTop: 4,
-    fontStyle: 'italic',
+  timestamp: {
+    color: '#64748B',
+    fontSize: 12,
+    fontWeight: '600',
   },
   rightColumn: {
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
   amount: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    fontSize: 17,
+    fontWeight: '800',
+    letterSpacing: 0,
+    marginBottom: 6,
   },
-  typeText: {
+  statusBadge: {
+    backgroundColor: '#F8FAFC',
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  statusText: {
+    color: '#475569',
     fontSize: 11,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontWeight: '800',
+    letterSpacing: 0,
   },
 });

@@ -24,9 +24,16 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
   const isOutline = variant === 'outline';
   const isDisabled = disabled || isLoading;
 
+  const getTextColor = () => {
+    if (isDisabled && !isOutline) return '#94A3B8';
+    if (isOutline) return '#0F766E';
+    if (variant === 'secondary') return '#0F172A';
+    return '#FFFFFF';
+  };
+
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={0.8}
       disabled={isDisabled}
       style={[
         styles.buttonBase,
@@ -37,14 +44,9 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
       {...props}
     >
       {isLoading ? (
-        <ActivityIndicator color={isOutline ? '#007bff' : '#ffffff'} />
+        <ActivityIndicator color={getTextColor()} />
       ) : (
-        <Text
-          style={[
-            styles.textBase,
-            isOutline ? styles.textOutline : styles.textLight,
-          ]}
-        >
+        <Text style={[styles.textBase, { color: getTextColor() }]}>
           {title}
         </Text>
       )}
@@ -56,54 +58,48 @@ const styles = StyleSheet.create({
   buttonBase: {
     paddingVertical: 14,
     paddingHorizontal: 20,
-    borderRadius: 10,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 8,
-    minHeight: 50,
+    minHeight: 56,
     flexDirection: 'row',
-    elevation: 2, // Shadow for Android
-    shadowColor: '#000', // Shadows for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
   primary: {
-    backgroundColor: '#007bff',
-    borderWidth: 1,
-    borderColor: '#007bff',
+    backgroundColor: '#0F766E',
+    shadowColor: '#0F766E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   secondary: {
-    backgroundColor: '#6c757d',
+    backgroundColor: '#F1F5F9',
     borderWidth: 1,
-    borderColor: '#6c757d',
+    borderColor: '#E2E8F0',
   },
   danger: {
-    backgroundColor: '#dc3545',
-    borderWidth: 1,
-    borderColor: '#dc3545',
+    backgroundColor: '#BE123C',
+    shadowColor: '#BE123C',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   outline: {
     backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#007bff',
-    elevation: 0,
-    shadowOpacity: 0,
+    borderWidth: 1.5,
+    borderColor: '#0F766E',
   },
   disabled: {
-    opacity: 0.6,
-    elevation: 0,
+    backgroundColor: '#E2E8F0',
+    borderColor: '#E2E8F0',
     shadowOpacity: 0,
+    elevation: 0,
   },
   textBase: {
     fontSize: 16,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-  },
-  textLight: {
-    color: '#ffffff',
-  },
-  textOutline: {
-    color: '#007bff',
+    fontWeight: '700',
+    letterSpacing: 0,
   },
 });

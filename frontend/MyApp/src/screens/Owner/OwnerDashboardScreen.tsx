@@ -7,102 +7,29 @@ import {
   View,
 } from 'react-native';
 
-export type OwnerDashboardFeatureId =
-  | 'business-command-center'
-  | 'live-signal-desk'
-  | 'decision-brief'
-  | 'cashflow-pulse'
-  | 'inventory-pulse'
-  | 'field-ops-map'
-  | 'workflow-pulse'
-  | 'client-pulse'
-  | 'ops-timeline'
-  | 'team-pulse'
-  | 'revenue-stream';
+import { ActionQueueItem } from '../../components/ActionQueueItem';
+import { LiveSignalCard } from '../../components/LiveSignalCard';
+import { MetricCard } from '../../components/MetricCard';
+import {
+  actionQueue,
+  liveSignals,
+  ownerDashboardFeatures,
+  ownerMetrics,
+} from '../../data/demoData';
+import type { FeatureId } from '../../data/demoData';
 
-type OwnerDashboardFeature = {
-  id: OwnerDashboardFeatureId;
-  title: string;
-  summary: string;
-  signal: string;
-};
+export type OwnerDashboardFeatureId = FeatureId;
 
 interface OwnerDashboardScreenProps {
   onOpenFeature?: (featureId: OwnerDashboardFeatureId) => void;
 }
 
-const ownerFeatures: OwnerDashboardFeature[] = [
-  {
-    id: 'business-command-center',
-    title: 'Command Center',
-    summary: 'Live overview for revenue, work, alerts, and team movement.',
-    signal: 'Live now',
-  },
-  {
-    id: 'live-signal-desk',
-    title: 'Signal Desk',
-    summary: 'Important changes from every active business stream.',
-    signal: '12 signals',
-  },
-  {
-    id: 'decision-brief',
-    title: 'Decision Briefs',
-    summary: 'Fast summaries for actions that need owner approval.',
-    signal: '4 pending',
-  },
-  {
-    id: 'cashflow-pulse',
-    title: 'Cashflow Pulse',
-    summary: 'Incoming, outgoing, due, and delayed payments.',
-    signal: 'Updated',
-  },
-  {
-    id: 'inventory-pulse',
-    title: 'Inventory Pulse',
-    summary: 'Resource levels, restock needs, and fast-moving items.',
-    signal: '3 alerts',
-  },
-  {
-    id: 'field-ops-map',
-    title: 'Field Ops Map',
-    summary: 'Real-time routes, deliveries, and field team status.',
-    signal: 'Tracking',
-  },
-  {
-    id: 'workflow-pulse',
-    title: 'Workflow Pulse',
-    summary: 'Work queues, blockers, handoffs, and completion flow.',
-    signal: '8 active',
-  },
-  {
-    id: 'client-pulse',
-    title: 'Client Pulse',
-    summary: 'Client activity, follow-ups, and high-value accounts.',
-    signal: '6 updates',
-  },
-  {
-    id: 'ops-timeline',
-    title: 'Ops Timeline',
-    summary: 'A running timeline of business events and team actions.',
-    signal: 'Today',
-  },
-  {
-    id: 'team-pulse',
-    title: 'Team Pulse',
-    summary: 'Employee check-ins, task progress, and workload balance.',
-    signal: '5 online',
-  },
-  {
-    id: 'revenue-stream',
-    title: 'Revenue Stream',
-    summary: 'Sales activity, captured payments, and daily performance.',
-    signal: 'Open',
-  },
-];
-
 export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({
   onOpenFeature,
 }) => {
+  const urgentActions = actionQueue.slice(0, 2);
+  const topSignal = liveSignals[0];
+
   return (
     <ScrollView
       style={styles.screen}
@@ -111,17 +38,44 @@ export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({
     >
       <View style={styles.header}>
         <Text style={styles.eyebrow}>Owner workspace</Text>
-        <Text style={styles.title}>Run the business from one place.</Text>
+        <Text style={styles.title}>Command the business in real time.</Text>
         <Text style={styles.subtitle}>
-          Open live signals, cashflow, field ops, client work, and team activity.
+          Signals, cashflow, routes, clients, and team workload are ready from one
+          control room.
         </Text>
       </View>
 
+      <View style={styles.metricsGrid}>
+        {ownerMetrics.map(metric => (
+          <MetricCard
+            key={metric.id}
+            title={metric.title}
+            value={metric.value}
+            trend={metric.trend}
+            trendValue={metric.trendValue}
+            caption={metric.caption}
+          />
+        ))}
+      </View>
+
+      <Text style={styles.sectionTitle}>Highest impact signal</Text>
+      <LiveSignalCard
+        title={topSignal.title}
+        summary={topSignal.summary}
+        impact={topSignal.impact}
+        signalType={topSignal.signalType}
+        severity={topSignal.severity}
+        status={topSignal.status}
+        updatedAt={topSignal.updatedAt}
+        actionLabel={topSignal.actionLabel}
+      />
+
+      <Text style={styles.sectionTitle}>Feature access</Text>
       <View style={styles.grid}>
-        {ownerFeatures.map(feature => (
+        {ownerDashboardFeatures.map(feature => (
           <TouchableOpacity
             key={feature.id}
-            activeOpacity={0.75}
+            activeOpacity={0.78}
             style={styles.featureCard}
             onPress={() => onOpenFeature?.(feature.id)}
           >
@@ -133,14 +87,26 @@ export const OwnerDashboardScreen: React.FC<OwnerDashboardScreenProps> = ({
           </TouchableOpacity>
         ))}
       </View>
+
+      <Text style={styles.sectionTitle}>Owner action queue</Text>
+      {urgentActions.map(action => (
+        <ActionQueueItem
+          key={action.id}
+          title={action.title}
+          detail={action.detail}
+          owner={action.owner}
+          dueLabel={action.dueLabel}
+          priority={action.priority}
+        />
+      ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
+    backgroundColor: '#F5F7FA',
     flex: 1,
-    backgroundColor: '#f6f8fb',
   },
   content: {
     padding: 20,
@@ -150,32 +116,47 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   eyebrow: {
-    color: '#0f766e',
+    color: '#0F766E',
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: 0,
     marginBottom: 8,
     textTransform: 'uppercase',
   },
   title: {
     color: '#111827',
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '800',
-    lineHeight: 34,
+    lineHeight: 36,
     marginBottom: 8,
   },
   subtitle: {
-    color: '#526071',
+    color: '#4B5563',
     fontSize: 15,
     lineHeight: 22,
   },
+  metricsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  sectionTitle: {
+    color: '#111827',
+    fontSize: 17,
+    fontWeight: '800',
+    marginBottom: 10,
+    marginTop: 12,
+  },
   grid: {
-    gap: 12,
+    marginBottom: 8,
   },
   featureCard: {
-    backgroundColor: '#ffffff',
-    borderColor: '#d9e2ec',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E7EB',
     borderRadius: 8,
     borderWidth: 1,
+    marginBottom: 12,
     padding: 16,
   },
   featureHeader: {
@@ -185,20 +166,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   featureTitle: {
-    color: '#172033',
+    color: '#111827',
     flex: 1,
     fontSize: 17,
     fontWeight: '800',
     marginRight: 12,
   },
   signal: {
-    color: '#0f766e',
+    color: '#0F766E',
     fontSize: 12,
     fontWeight: '800',
+    letterSpacing: 0,
     textTransform: 'uppercase',
   },
   featureSummary: {
-    color: '#5b6778',
+    color: '#4B5563',
     fontSize: 14,
     lineHeight: 20,
   },

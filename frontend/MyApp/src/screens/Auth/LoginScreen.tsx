@@ -1,49 +1,104 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+
 import { CustomButton } from '../../components/CustomButton';
-import { CustomInput } from '../../components/CustomInput';
 
-export const LoginScreen = ({ navigation }: any) => {
-  const [role, setRole] = useState<'owner' | 'employee'>('employee');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export type LoginRole = 'owner' | 'employee';
 
-  const handleLogin = () => {
-    // Perform authentication logic here
-    if (role === 'owner') {
-      navigation.replace('OwnerDashboard');
-    } else {
-      navigation.replace('EmployeeDashboard');
-    }
-  };
+interface LoginScreenProps {
+  onSelectRole: (role: LoginRole) => void;
+}
 
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectRole }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to StoreManager</Text>
-      
-      <View style={styles.roleToggle}>
-        <CustomButton 
-          title="I am an Employee" 
-          variant={role === 'employee' ? 'primary' : 'secondary'}
-          onPress={() => setRole('employee')} 
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.hero}>
+        <Text style={styles.kicker}>Business pulse</Text>
+        <Text style={styles.title}>Run live operations, even when the network drops.</Text>
+        <Text style={styles.subtitle}>
+          Choose a workspace. Demo data is hardcoded for the hackathon build.
+        </Text>
+      </View>
+
+      <View style={styles.buttonPanel}>
+        <CustomButton
+          title="Owner workspace"
+          onPress={() => onSelectRole('owner')}
         />
-        <CustomButton 
-          title="I am the Owner" 
-          variant={role === 'owner' ? 'primary' : 'secondary'}
-          onPress={() => setRole('owner')} 
+        <CustomButton
+          title="Employee workspace"
+          variant="secondary"
+          onPress={() => onSelectRole('employee')}
         />
       </View>
 
-      <CustomInput placeholder="Email ID" value={email} onChangeText={setEmail} />
-      <CustomInput placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
-      
-      <CustomButton title="Login" onPress={handleLogin} />
-    </View>
+      <View style={styles.noteCard}>
+        <Text style={styles.noteTitle}>Demo mode</Text>
+        <Text style={styles.noteText}>
+          Backend, database, and auth can plug in later. This phase focuses on the
+          role flow, live signals, decision briefs, and action queues.
+        </Text>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: 'center', backgroundColor: '#f8f9fa' },
-  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 30 },
-  roleToggle: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20 },
+  screen: {
+    backgroundColor: '#F5F7FA',
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  hero: {
+    marginBottom: 28,
+  },
+  kicker: {
+    color: '#0F766E',
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 0,
+    marginBottom: 10,
+    textTransform: 'uppercase',
+  },
+  title: {
+    color: '#111827',
+    fontSize: 32,
+    fontWeight: '800',
+    lineHeight: 38,
+    marginBottom: 12,
+  },
+  subtitle: {
+    color: '#4B5563',
+    fontSize: 16,
+    lineHeight: 23,
+  },
+  buttonPanel: {
+    marginBottom: 20,
+  },
+  noteCard: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 16,
+  },
+  noteTitle: {
+    color: '#111827',
+    fontSize: 15,
+    fontWeight: '800',
+    marginBottom: 6,
+  },
+  noteText: {
+    color: '#4B5563',
+    fontSize: 14,
+    lineHeight: 20,
+  },
 });
