@@ -45,9 +45,8 @@ export const ActionQueueItem: React.FC<ActionQueueItemProps> = ({
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#1c1c1e',
     backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    borderRadius: 2,
+    borderRadius: 20,
     paddingHorizontal: 8,
     marginBottom: 16,
     padding: 18,

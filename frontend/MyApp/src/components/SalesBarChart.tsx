@@ -24,7 +24,7 @@ export const SalesBarChart: React.FC<SalesBarChartProps> = ({ title, data }) => 
           // Calculate height percentage (min 5% to always show something)
           const fillPercentage = maxSales > 0 ? (point.sales / maxSales) * 100 : 0;
           const heightPct = Math.max(fillPercentage, 5);
-          
+
           const isHighest = point.sales === maxSales && maxSales > 0;
 
           return (
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1c1c1e',
     borderColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 4,
+    borderRadius: 20,
     borderWidth: 1,
     padding: 20,
     marginBottom: 16,
@@ -90,14 +90,14 @@ const styles = StyleSheet.create({
   barTrack: {
     width: 24,
     backgroundColor: '#27272a',
-    borderRadius: 2,
+    borderRadius: 6,
     flex: 1,
     justifyContent: 'flex-end',
     overflow: 'hidden',
   },
   barFill: {
     backgroundColor: '#3b82f6', // Blueprint
-    borderRadius: 2,
+    borderRadius: 6,
     width: '100%',
   },
   barFillHighest: {

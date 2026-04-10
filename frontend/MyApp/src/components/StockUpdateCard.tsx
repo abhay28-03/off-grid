@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1c1c1e',
     borderColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 4,
+    borderRadius: 20,
     borderWidth: 1,
     marginBottom: 16,
     padding: 20,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: 4,
+    borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#27272a',
-    borderRadius: 4,
+    borderRadius: 12,
     padding: 4,
   },
   stepButton: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 4,
+    borderRadius: 8,
     backgroundColor: '#3f3f46',
   },
   stepButtonText: {
@@ -148,8 +148,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   updateButton: {
+    marginLeft: 2,
     backgroundColor: '#3b82f6',
-    borderRadius: 4,
+    borderRadius: 12,
     paddingHorizontal: 16,
     height: 48,
     alignItems: 'center',
