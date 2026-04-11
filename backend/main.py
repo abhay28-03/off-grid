@@ -1,8 +1,13 @@
 import json
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from database import supabase  # Import the client we just created
+
+import models
+from database import engine, get_db
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Off Grid Demo API")
 
@@ -83,8 +88,9 @@ def get_decision_briefs():
     return {"data": data_store.decisionBriefs}
 
 @app.get("/api/inventory")
-def get_inventory():
-    return {"data": data_store.inventoryItems}
+def get_inventory(db: Session = Depends(get_db)):
+    items = db.query(models.InventoryItem).all()
+    return {"data": items}
 
 @app.get("/api/routes")
 def get_routes():
