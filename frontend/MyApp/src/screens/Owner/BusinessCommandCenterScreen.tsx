@@ -5,7 +5,7 @@ import { AppsGrid } from '../../components/AppsGrid';
 import { LiveSignalCard } from '../../components/LiveSignalCard';
 import { PulseMetricCard } from '../../components/PulseMetricCard';
 import { SalesBarChart } from '../../components/SalesBarChart';
-import { fetchSignals, fetchOwnerDashboard, fetchOwnerMetrics, fetchSales } from '../../api/client';
+import { fetchSignals, fetchOwnerDashboard, fetchOwnerMetrics, fetchSales, resolveSignal } from '../../api/client';
 import type { FeatureId, LiveSignal, DashboardFeature, Metric, SalesDataPoint } from '../../data/demoData';
 
 interface BusinessCommandCenterScreenProps {
@@ -21,6 +21,14 @@ export const BusinessCommandCenterScreen: React.FC<BusinessCommandCenterScreenPr
   const [ownerMetrics, setOwnerMetrics] = React.useState<Metric[]>([]);
   const [salesData, setSalesData] = React.useState<SalesDataPoint[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const handleResolveSignal = async (id: string) => {
+    try {
+      await resolveSignal(id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -90,6 +98,7 @@ export const BusinessCommandCenterScreen: React.FC<BusinessCommandCenterScreenPr
           status={signal.status}
           updatedAt={signal.updatedAt}
           actionLabel={signal.actionLabel}
+          onAction={() => handleResolveSignal(signal.id)}
         />
       ))}
 

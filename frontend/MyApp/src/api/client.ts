@@ -102,3 +102,43 @@ export const updateStock = async (itemId: string, sales: number) => {
   });
   return res.json();
 };
+
+export const resolveAction = async (id: string) => {
+  const res = await fetch(`${BASE_URL}/actions/resolve/${id}`, { method: 'POST' });
+  return res.json();
+};
+
+export const resolveSignal = async (id: string) => {
+  const res = await fetch(`${BASE_URL}/signals/resolve/${id}`, { method: 'POST' });
+  return res.json();
+};
+
+export const resolveBrief = async (id: string) => {
+  const res = await fetch(`${BASE_URL}/briefs/resolve/${id}`, { method: 'POST' });
+  return res.json();
+};
+
+export const assignTask = async (employeeId: string, description: string) => {
+  const res = await fetch(`${BASE_URL}/tasks/assign`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ employee_id: employeeId, description }),
+  });
+  return res.json();
+};
+
+export const fetchPendingTask = async () => {
+  const res = await fetch(`${BASE_URL}/tasks/pending`);
+  const json = await res.json();
+  return json.data;
+};
+
+export const acceptTask = async (taskId: string) => {
+  const res = await fetch(`${BASE_URL}/tasks/accept/${taskId}`, { method: 'POST' });
+  return res.json();
+};
+
+export const rejectTask = async (taskId: string) => {
+  const res = await fetch(`${BASE_URL}/tasks/reject/${taskId}`, { method: 'POST' });
+  return res.json();
+};

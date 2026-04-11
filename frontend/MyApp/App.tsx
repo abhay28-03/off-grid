@@ -28,6 +28,8 @@ import { TeamStatus } from './src/screens/Owner/TeamStatus';
 import { ToolsScreen } from './src/screens/ToolsScreen';
 import type { FeatureId } from './src/data/demoData';
 
+import { fetchPendingTask, acceptTask, rejectTask } from './src/api/client';
+
 const featureTitles: Record<FeatureId, string> = {
   'business-command-center': 'Dashboard Overview',
   'cashflow-pulse': 'Payments & Cashflow',
@@ -48,6 +50,15 @@ function App() {
   const [role, setRole] = useState<LoginRole | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>('home');
   const [activeFeature, setActiveFeature] = useState<FeatureId | null>(null);
+  
+  const [pendingTask, setPendingTask] = useState<any>(null);
+
+  const checkPending = async () => {
+    try {
+      const task = await fetchPendingTask();
+      setPendingTask(task);
+    } catch (e) {}
+  };
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8000/ws/v1/sync');
@@ -56,11 +67,34 @@ function App() {
         const data = JSON.parse(e.data);
         if (data.type === 'REFRESH_DATA') {
           DeviceEventEmitter.emit('refresh_dashboard');
+          checkPending();
         }
       } catch (err) {}
     };
     return () => ws.close();
   }, []);
+
+  useEffect(() => {
+    if (role === 'employee') {
+      checkPending();
+    } else {
+      setPendingTask(null);
+    }
+  }, [role]);
+
+  const handleAcceptTask = async () => {
+    if (pendingTask) {
+       await acceptTask(pendingTask.id);
+       setPendingTask(null);
+    }
+  };
+
+  const handleRejectTask = async () => {
+    if (pendingTask) {
+       await rejectTask(pendingTask.id);
+       setPendingTask(null);
+    }
+  };
 
   function handleRoleSelect(selectedRole: LoginRole) {
     setRole(selectedRole);
@@ -250,6 +284,29 @@ function App() {
             </View>
           </View>
         )}
+
+        {role === 'employee' && pendingTask && (
+          <View style={StyleSheet.absoluteFill}>
+            <View style={styles.globalModalOverlay}>
+              <View style={styles.globalModalContent}>
+                <View style={styles.urgentBadge}>
+                  <Text style={styles.urgentText}>NEW ASSIGNMENT</Text>
+                </View>
+                <Text style={styles.globalModalTitle}>Task Assigned</Text>
+                <Text style={styles.globalModalDesc}>{pendingTask.description}</Text>
+                
+                <View style={styles.globalModalActions}>
+                  <TouchableOpacity style={styles.globalRejectBtn} onPress={handleRejectTask}>
+                    <Text style={styles.globalRejectText}>Reject</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.globalAcceptBtn} onPress={handleAcceptTask}>
+                    <Text style={styles.globalAcceptText}>Accept Action</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+        )}
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -349,6 +406,85 @@ const styles = StyleSheet.create({
   navTextActive: {
     color: '#fafafa',
     fontWeight: '800',
+  },
+  globalModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  globalModalContent: {
+    backgroundColor: '#18181b',
+    borderColor: '#3B82F6',
+    borderWidth: 2,
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#3B82F6',
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 10,
+    alignItems: 'center',
+  },
+  urgentBadge: {
+    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginBottom: 16,
+  },
+  urgentText: {
+    color: '#60A5FA',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  globalModalTitle: {
+    color: '#fafafa',
+    fontSize: 24,
+    fontWeight: '800',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  globalModalDesc: {
+    color: '#e4e4e7',
+    fontSize: 18,
+    lineHeight: 26,
+    textAlign: 'center',
+    marginBottom: 32,
+    fontWeight: '500',
+  },
+  globalModalActions: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  globalRejectBtn: {
+    flex: 1,
+    paddingVertical: 14,
+    marginRight: 10,
+    backgroundColor: 'transparent',
+    borderColor: '#3f3f46',
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  globalRejectText: {
+    color: '#a1a1aa',
+    fontWeight: '800',
+    fontSize: 15,
+  },
+  globalAcceptBtn: {
+    flex: 1,
+    paddingVertical: 14,
+    marginLeft: 10,
+    backgroundColor: '#3B82F6',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  globalAcceptText: {
+    color: '#ffffff',
+    fontWeight: '800',
+    fontSize: 15,
   },
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Modal, TextInput } from 'react-native';
 
-import { fetchTeam } from '../../api/client';
+import { fetchTeam, assignTask } from '../../api/client';
 
 const getInitials = (name: string) => {
   return name.substring(0, 2).toUpperCase();
@@ -19,6 +19,22 @@ export const TeamStatus = () => {
   const syncTick = useDashboardSync();
   const [teamMembers, setTeamMembers] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const [assignModalVisible, setAssignModalVisible] = React.useState(false);
+  const [selectedEmployee, setSelectedEmployee] = React.useState<any>(null);
+  const [taskText, setTaskText] = React.useState('');
+
+  const handleAssignTask = async () => {
+    if (!selectedEmployee || !taskText) return;
+    try {
+      await assignTask(selectedEmployee.id, taskText);
+      setAssignModalVisible(false);
+      setSelectedEmployee(null);
+      setTaskText('');
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -55,7 +71,15 @@ export const TeamStatus = () => {
       </Text>
 
       {teamMembers.map(member => (
-        <View key={member.id} style={styles.card}>
+        <TouchableOpacity 
+          key={member.id} 
+          style={styles.card} 
+          activeOpacity={0.8}
+          onPress={() => {
+            setSelectedEmployee(member);
+            setAssignModalVisible(true);
+          }}
+        >
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{getInitials(member.name)}</Text>
@@ -71,7 +95,7 @@ export const TeamStatus = () => {
           <View style={styles.infoContainer}>
             <View style={styles.headerRow}>
               <Text style={styles.name}>{member.name}</Text>
-              <Text style={styles.role}>{member.role}</Text>
+              <Text style={styles.actionPrompt}>Assign Task ➡</Text>
             </View>
             
             <View style={styles.detailRow}>
@@ -99,8 +123,40 @@ export const TeamStatus = () => {
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
+      <View style={{ height: 60 }} />
+
+      <Modal visible={assignModalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Assign Task</Text>
+            <Text style={styles.modalSubtitle}>To: {selectedEmployee?.name}</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g. Inspect the East grid..."
+              placeholderTextColor="#71717a"
+              value={taskText}
+              onChangeText={setTaskText}
+              autoFocus
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity 
+                style={styles.cancelBtn} 
+                onPress={() => {
+                  setAssignModalVisible(false);
+                  setTaskText('');
+                }}
+              >
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.assignBtn} onPress={handleAssignTask}>
+                <Text style={styles.assignText}>Assign</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={{ height: 60 }} />
     </ScrollView>
   );
@@ -237,5 +293,65 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '800',
     textTransform: 'uppercase',
+  },
+  actionPrompt: {
+    color: '#3B82F6',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: '#18181b',
+    borderColor: '#27272a',
+    borderWidth: 1,
+    borderRadius: 16,
+    padding: 24,
+  },
+  modalTitle: {
+    color: '#fafafa',
+    fontSize: 20,
+    fontWeight: '800',
+  },
+  modalSubtitle: {
+    color: '#a1a1aa',
+    fontSize: 14,
+    marginBottom: 20,
+  },
+  modalInput: {
+    backgroundColor: '#09090b',
+    borderColor: '#27272a',
+    borderWidth: 1,
+    borderRadius: 8,
+    color: '#fafafa',
+    padding: 14,
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  cancelBtn: {
+    padding: 12,
+    marginRight: 10,
+  },
+  cancelText: {
+    color: '#a1a1aa',
+    fontWeight: '700',
+  },
+  assignBtn: {
+    backgroundColor: '#3B82F6',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  assignText: {
+    color: '#fff',
+    fontWeight: '800',
   },
 });

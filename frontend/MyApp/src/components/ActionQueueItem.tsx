@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import type { Priority } from '../data/demoData';
 
@@ -9,6 +9,7 @@ export interface ActionQueueItemProps {
   owner: string;
   dueLabel: string;
   priority: Priority;
+  onResolve?: () => void;
 }
 
 const priorityConfig = {
@@ -23,6 +24,7 @@ export const ActionQueueItem: React.FC<ActionQueueItemProps> = ({
   owner,
   dueLabel,
   priority,
+  onResolve,
 }) => {
   const config = priorityConfig[priority];
 
@@ -38,7 +40,14 @@ export const ActionQueueItem: React.FC<ActionQueueItemProps> = ({
       </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.detail}>{detail}</Text>
-      <Text style={styles.dueLabel}>{dueLabel}</Text>
+      <View style={styles.footerRow}>
+        <Text style={styles.dueLabel}>{dueLabel}</Text>
+        {onResolve && (
+          <TouchableOpacity activeOpacity={0.7} style={styles.resolveBtn} onPress={onResolve}>
+            <Text style={styles.resolveBtnText}>Resolve action</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };
@@ -99,5 +108,22 @@ const styles = StyleSheet.create({
     color: '#3b82f6',
     fontSize: 13,
     fontWeight: '800',
+  },
+  footerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  resolveBtn: {
+    backgroundColor: '#3b82f6',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  resolveBtnText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: '800',
+    textTransform: 'uppercase',
   },
 });

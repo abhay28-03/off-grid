@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { ActionQueueItem } from '../../components/ActionQueueItem';
-import { fetchInventory, fetchActionQueue } from '../../api/client';
+import { fetchInventory, fetchActionQueue, resolveAction } from '../../api/client';
 
 import { useDashboardSync } from '../../hooks/useDashboardSync';
 
@@ -11,6 +11,14 @@ export const InventoryPulseScreen = () => {
   const [inventoryItems, setInventoryItems] = React.useState<any[]>([]);
   const [actionQueue, setActionQueue] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const handleResolveAction = async (id: string) => {
+    try {
+      await resolveAction(id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -77,6 +85,7 @@ export const InventoryPulseScreen = () => {
             owner={action.owner}
             dueLabel={action.dueLabel}
             priority={action.priority}
+            onResolve={() => handleResolveAction(action.id)}
           />
         ))}
     </ScrollView>

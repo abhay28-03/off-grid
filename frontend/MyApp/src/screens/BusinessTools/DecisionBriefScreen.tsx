@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 
-import { fetchDecisionBriefs } from '../../api/client';
+import { fetchDecisionBriefs, resolveBrief } from '../../api/client';
 
 import { useDashboardSync } from '../../hooks/useDashboardSync';
 
@@ -9,6 +9,14 @@ export const DecisionBriefScreen = () => {
   const syncTick = useDashboardSync();
   const [decisionBriefs, setDecisionBriefs] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const handleResolve = async (id: string) => {
+    try {
+      await resolveBrief(id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -59,7 +67,9 @@ export const DecisionBriefScreen = () => {
             <Text style={styles.riskLabel}>Risk</Text>
             <Text style={styles.riskText}>{brief.risk}</Text>
           </View>
-          <Text style={styles.action}>{brief.ownerAction}</Text>
+          <TouchableOpacity activeOpacity={0.7} style={styles.actionBtn} onPress={() => handleResolve(brief.id)}>
+            <Text style={styles.actionText}>{brief.ownerAction}</Text>
+          </TouchableOpacity>
         </View>
       ))}
     </ScrollView>
@@ -146,9 +156,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  action: {
-    color: '#0F766E',
+  actionBtn: {
+    backgroundColor: 'rgba(15, 118, 110, 0.1)',
+    borderColor: 'rgba(15, 118, 110, 0.3)',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  actionText: {
+    color: '#14B8A6',
     fontSize: 14,
     fontWeight: '800',
+    textTransform: 'uppercase',
   },
 });

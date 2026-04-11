@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 
 import { LiveSignalCard } from '../../components/LiveSignalCard';
-import { fetchSignals } from '../../api/client';
+import { fetchSignals, resolveSignal } from '../../api/client';
 
 import { useDashboardSync } from '../../hooks/useDashboardSync';
 
@@ -10,6 +10,14 @@ export const LiveSignalDeskScreen = () => {
   const syncTick = useDashboardSync();
   const [liveSignals, setLiveSignals] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const handleResolveSignal = async (id: string) => {
+    try {
+      await resolveSignal(id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -51,11 +59,12 @@ export const LiveSignalDeskScreen = () => {
           title={signal.title}
           summary={signal.summary}
           impact={signal.impact}
-          signalType={signal.signalType}
           severity={signal.severity}
           status={signal.status}
+          signalType={signal.type}
           updatedAt={signal.updatedAt}
           actionLabel={signal.actionLabel}
+          onAction={() => handleResolveSignal(signal.id)}
         />
       ))}
       <View style={{ height: 60 }} />

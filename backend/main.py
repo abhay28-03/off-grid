@@ -173,6 +173,68 @@ async def update_stock(update: StockUpdate):
             
     raise HTTPException(status_code=404, detail="Item not found")
 
+@app.post("/api/actions/resolve/{action_id}")
+async def resolve_action(action_id: str):
+    import data_store
+    data_store.actionQueue = [a for a in data_store.actionQueue if a["id"] != action_id]
+    await sync_manager.broadcast({"type": "REFRESH_DATA", "source": "actions"})
+    return {"status": "success"}
+
+@app.post("/api/signals/resolve/{signal_id}")
+async def resolve_signal(signal_id: str):
+    import data_store
+    data_store.liveSignals = [s for s in data_store.liveSignals if s["id"] != signal_id]
+    await sync_manager.broadcast({"type": "REFRESH_DATA", "source": "signals"})
+    return {"status": "success"}
+
+@app.post("/api/briefs/resolve/{brief_id}")
+async def resolve_brief(brief_id: str):
+    import data_store
+    data_store.decisionBriefs = [b for b in data_store.decisionBriefs if b["id"] != brief_id]
+    await sync_manager.broadcast({"type": "REFRESH_DATA", "source": "briefs"})
+    return {"status": "success"}
+
+import uuid
+
+@app.post("/api/tasks/assign")
+async def assign_task(payload: dict):
+    import data_store
+    data_store.pendingEmployeeTask = {
+        "id": str(uuid.uuid4()),
+        "employee_id": payload.get("employee_id"),
+        "description": payload.get("description"),
+        "status": "pending"
+    }
+    await sync_manager.broadcast({"type": "REFRESH_DATA", "source": "task_assign"})
+    return {"status": "success"}
+
+@app.get("/api/tasks/pending")
+def get_pending_task():
+    import data_store
+    task = getattr(data_store, "pendingEmployeeTask", None)
+    return {"data": task}
+
+@app.post("/api/tasks/accept/{task_id}")
+async def accept_task(task_id: str):
+    import data_store
+    task = getattr(data_store, "pendingEmployeeTask", None)
+    if task and task["id"] == task_id:
+        for emp in data_store.teamMembers:
+            if emp["id"] == task["employee_id"]:
+                emp["currentTask"] = task["description"]
+                emp["status"] = "Busy"
+        data_store.pendingEmployeeTask = None
+        await sync_manager.broadcast({"type": "REFRESH_DATA", "source": "task_accept"})
+        return {"status": "success"}
+    raise HTTPException(status_code=404, detail="Task not active")
+
+@app.post("/api/tasks/reject/{task_id}")
+async def reject_task(task_id: str):
+    import data_store
+    data_store.pendingEmployeeTask = None
+    await sync_manager.broadcast({"type": "REFRESH_DATA", "source": "task_reject"})
+    return {"status": "success"}
+
 @app.websocket("/ws/v1/tracking/live")
 async def websocket_tracking_endpoint(websocket: WebSocket):
     """

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 import type { SignalSeverity, SignalStatus } from '../data/demoData';
 
@@ -12,6 +12,7 @@ export interface LiveSignalCardProps {
   status?: SignalStatus;
   updatedAt: string;
   actionLabel?: string;
+  onAction?: () => void;
 }
 
 const severityConfig = {
@@ -37,6 +38,7 @@ export const LiveSignalCard: React.FC<LiveSignalCardProps> = ({
   status = 'live',
   updatedAt,
   actionLabel,
+  onAction,
 }) => {
   const config = severityConfig[severity];
 
@@ -66,7 +68,11 @@ export const LiveSignalCard: React.FC<LiveSignalCardProps> = ({
 
       <View style={styles.footer}>
         <Text style={styles.updatedAt}>Updated {updatedAt}</Text>
-        {actionLabel ? <Text style={[styles.actionText, { color: config.color }]}>{actionLabel}</Text> : null}
+        {actionLabel ? (
+          <TouchableOpacity activeOpacity={0.7} onPress={onAction} style={styles.actionButton}>
+            <Text style={[styles.actionText, { color: config.color }]}>{actionLabel}</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
@@ -164,6 +170,12 @@ const styles = StyleSheet.create({
     color: '#71717a',
     fontSize: 13,
     fontWeight: '600',
+  },
+  actionButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    backgroundColor: '#27272a',
+    borderRadius: 6,
   },
   actionText: {
     fontSize: 13,

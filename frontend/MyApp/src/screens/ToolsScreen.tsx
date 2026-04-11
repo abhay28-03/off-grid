@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { ActionQueueItem } from '../components/ActionQueueItem';
-import { fetchActionQueue } from '../api/client';
+import { fetchActionQueue, resolveAction } from '../api/client';
 
 import { useDashboardSync } from '../hooks/useDashboardSync';
 
@@ -16,6 +16,14 @@ export const ToolsScreen: React.FC = () => {
   const syncTick = useDashboardSync();
   const [actionQueue, setActionQueue] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const handleResolveAction = async (id: string) => {
+    try {
+      await resolveAction(id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -61,6 +69,7 @@ export const ToolsScreen: React.FC = () => {
             owner={action.owner}
             dueLabel={action.dueLabel}
             priority={action.priority}
+            onResolve={() => handleResolveAction(action.id)}
           />
         ))}
       </View>
